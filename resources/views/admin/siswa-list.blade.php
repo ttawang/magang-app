@@ -13,21 +13,6 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <!--button class="btn btn-primary" id="tambah_data">Tambah</button-->
-                        <!--button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_tambah_data">Tambah</button-->
-                    @if(session('errors'))
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            Something it's wrong:
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                            <ul>
-                            @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                            @endforeach
-                            </ul>
-                        </div>
-                    @endif
                         <button type="button" class="btn btn-primary" id="btn_tambah">Tambah</button>
                         <p>
                         <table id="tabel_siswa" class="table table-striped table-bordered">
