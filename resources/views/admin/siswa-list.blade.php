@@ -18,11 +18,11 @@
                         <table id="tabel_siswa" class="table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th>No</th>
-                                    <th>Name</th>
+                                    <th width="5%">No</th>
+                                    <th width="30%">Nama</th>
                                     <th>Email</th>
                                     <th>Kelas</th>
-                                    <th>Action</th>
+                                    <th width="10%">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -55,7 +55,7 @@
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label text-secondary">No. Induk</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" name="no_induk" placeholder="No. Induk">
+                                <input type="text" class="form-control" name="no_induk" placeholder="No. Induk" onkeypress="return number_only(event)">
                             </div>
                         </div>
                         <div class="form-group row">
@@ -94,15 +94,6 @@
 
 <script type="text/javascript">
 $(document).ready(function () {
-
-    $('.select-cari').select2({
-        theme: 'bootstrap4'
-    });
-
-    $('.select-cari-modal').select2({
-      theme: 'bootstrap4',
-      dropdownParent : $('#modal_tambah_data'),
-    });
     $("#modal_tambah_data").on("hidden.bs.modal", function(){
         $(this).find("input,textarea").val('').end().find("input[type=checkbox], input[type=radio]").prop("checked", "").end();
         $(".select-cari-modal").val(0).trigger('change') ;
@@ -112,7 +103,14 @@ $(document).ready(function () {
     var tb = $('#tabel_siswa').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ url('siswa/get_data') }}",
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+        ajax: "{{ url('admin_siswa/get_data') }}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'nama', name: 'nama'},
@@ -120,7 +118,11 @@ $(document).ready(function () {
             {data: 'nama_kelas', name: 'nama_kelas'},
             {data: 'action', name: 'action', orderable: true, searchable: true
             },
-        ]
+        ],
+        columnDefs: [
+            { className: 'text-right', targets: [] },
+            { className: 'text-center', targets: [4] },
+	    ],
     });
 
     //SHOW MODAL/FORM
@@ -131,7 +133,7 @@ $(document).ready(function () {
     //ShOW MODAL/FORM DENGAN GETTING DATA BERDASARKAN ID
     $('body').on('click', '#btn_edit', function () {
         var id = $(this).data('id');
-        $.get("{{ url('siswa/edit') }}"+'/'+id, function (data) {
+        $.get("{{ url('admin_siswa/edit') }}"+'/'+id, function (data) {
             $("#modal_tambah_data").modal("show");
             $('[name=id]').val(data.id);
             $('[name=id_user]').val(data.id_user);
@@ -145,7 +147,7 @@ $(document).ready(function () {
     //MELAKUKAN CONTROLLER SIMPAN
     $("#btn_simpan").click(function(){
         $.ajax({
-            url: "{{ url('siswa/simpan')}} ",
+            url: "{{ url('admin_siswa/simpan')}} ",
             type:'POST',
             data: $("#form_tambah").serialize(),
             headers : {
@@ -201,7 +203,7 @@ $(document).ready(function () {
         }).then((result) => {
             if (result.isConfirmed) {
                 var id = $(this).data('id');
-                $.get("{{ url('siswa/hapus') }}"+'/'+id);
+                $.get("{{ url('admin_siswa/hapus') }}"+'/'+id);
                 Swal.fire({
                     title: 'Deleted!',
                     text: 'Data telah dihapus.',

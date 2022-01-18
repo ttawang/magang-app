@@ -9,18 +9,18 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">
-                            <i class="mr-1"></i>Daftar Guru
+                            <i class="mr-1"></i>Daftar Kelas
                         </div>
                     </div>
                     <div class="card-body">
                         <button type="button" class="btn btn-primary" id="btn_tambah">Tambah</button>
                         <p>
-                        <table id="tabel_guru" class="table table-striped table-bordered">
+                        <table id="tabel_kelas" class="table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th width="5%">No</th>
-                                    <th>Nama</th>
-                                    <th>Email</th>
+                                    <th>Kelas</th>
+                                    <th>Wali Kelas</th>
                                     <th width="10%">Aksi</th>
                                 </tr>
                             </thead>
@@ -39,7 +39,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modal_tambah_dataLabel">Tambah Data Guru</h5>
+                <h5 class="modal-title" id="modal_tambah_dataLabel">Tambah Data Kelas</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -50,21 +50,20 @@
                     <input type="hidden" name="id">
                     <div class="card-body">
                         <div class="form-group row">
-                            <label class="col-sm-4 col-form-label text-secondary">No. Induk</label>
+                            <label class="col-sm-4 col-form-label  text-secondary">Nama Kelas</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" name="no_induk" placeholder="No. Induk" onkeypress="return number_only(event)">
+                                <input type="text" class="form-control" name="nama" placeholder="Nama Kelas">
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-4 col-form-label  text-secondary">Nama Guru</label>
+                            <label class="col-sm-4 col-form-label  text-secondary">Wali Kelas</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" name="name" placeholder="Nama Guru">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label  text-secondary">Email</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" name="email" placeholder="Email">
+                                <select class="form-control select-cari-modal" name="walikelas">
+                                    <option value="0">-- Piih Wali Kelas --</option>
+                                    @foreach ($guru as $i)
+                                        <option value="{{ $i->id }}">{{ $i->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -86,9 +85,9 @@ $(document).ready(function () {
     });
 
     //MENAMPILKAN DATA DENGAN DATATABLES
-    var tb = $('#tabel_guru').DataTable({
+    var tb = $('#tabel_kelas').DataTable({
         processing: true,
-        serverSide: true,
+        serverSide: false,
         responsive: true,
         "paging": true,
         "lengthChange": true,
@@ -97,11 +96,11 @@ $(document).ready(function () {
         "info": true,
         "autoWidth": false,
         "responsive": true,
-        ajax: "{{ url('admin_guru/get_data') }}",
+        ajax: "{{ url('admin_kelas/get_data') }}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'name', name: 'name'},
-            {data: 'email', name: 'email'},
+            {data: 'nama', name: 'nama'},
+            {data: 'nama_walikelas', name: 'nama_walikelas'},
             {data: 'action', name: 'action', orderable: true, searchable: true
             },
         ],
@@ -119,19 +118,18 @@ $(document).ready(function () {
     //ShOW MODAL/FORM DENGAN GETTING DATA BERDASARKAN ID
     $('body').on('click', '#btn_edit', function () {
         var id = $(this).data('id');
-        $.get("{{ url('admin_guru/edit') }}"+'/'+id, function (data) {
+        $.get("{{ url('admin_kelas/edit') }}"+'/'+id, function (data) {
             $("#modal_tambah_data").modal("show");
             $('[name=id]').val(data.id);
-            $('[name=no_induk]').val(data.no_induk);
-            $('[name=name]').val(data.name);
-            $('[name=email]').val(data.email);
+            $('[name=nama]').val(data.nama);
+            $('[name=walikelas]').val(data.id_walikelas).trigger('change');
         })
     });
 
     //MELAKUKAN CONTROLLER SIMPAN
     $("#btn_simpan").click(function(){
         $.ajax({
-            url: "{{ url('admin_guru/simpan')}} ",
+            url: "{{ url('admin_kelas/simpan')}} ",
             type:'POST',
             data: $("#form_tambah").serialize(),
             headers : {
@@ -187,7 +185,7 @@ $(document).ready(function () {
         }).then((result) => {
             if (result.isConfirmed) {
                 var id = $(this).data('id');
-                $.get("{{ url('admin_guru/hapus') }}"+'/'+id);
+                $.get("{{ url('admin_kelas/hapus') }}"+'/'+id);
                 Swal.fire({
                     title: 'Deleted!',
                     text: 'Data telah dihapus.',

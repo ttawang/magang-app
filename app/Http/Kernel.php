@@ -64,11 +64,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
-        // 'admin_registrasi' => \App\Http\Middleware\AdminRegistrasiMiddleware::class,
-        // 'admin_bagian_poli' => \App\Http\Middleware\AdminBagianPoliMiddleware::class,
-        // 'admin_unit_penunjang' => \App\Http\Middleware\AdminUnitPenunjangMiddleware::class,
-        // 'admin_farmasi_obat' => \App\Http\Middleware\AdminFarmasiObatMiddleware::class,
-        // 'admin_pembayaran' => \App\Http\Middleware\AdminPembayaranMiddleware::class,
-        // 'kepala_puskesmas' => \App\Http\Middleware\KepalaPuskesmasMiddleware::class,
+        'siswa' => \App\Http\Middleware\SiswaMiddleware::class,
+        'guru' => \App\Http\Middleware\GuruMiddleware::class,
     ];
 }

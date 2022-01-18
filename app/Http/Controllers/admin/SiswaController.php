@@ -35,7 +35,7 @@ class SiswaController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
                     //$actionBtn = '<a href="javascript:void(0)" data-toggle="modal" data-id="'.$row->id.'" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" data-toggle="modal" data-id="'.$row->id.'" class="delete btn btn-danger btn-sm ">Delete</a>';
-                    $actionBtn = '<button type="button" class="edit btn btn-success btn-sm" id="btn_edit" data-id="'.$row->id.'">Edit</button> <button type="button" class="delete btn btn-danger btn-sm" id="btn_hapus" data-id="'.$row->id.'">Hapus</button>'.
+                    $actionBtn = '<button type="button" class="edit btn btn-success btn-sm" id="btn_edit" data-id="'.$row->id.'"><i class="fas fa-pen"></i></button> <button type="button" class="delete btn btn-danger btn-sm" id="btn_hapus" data-id="'.$row->id.'"><i class="fas fa-trash-alt"></i></button>'.
                         '<input type="hidden" id="id'.$row->id.'" value="'.$row->id.'">';
                     return $actionBtn;
                 })
@@ -63,9 +63,9 @@ class SiswaController extends Controller
                     'no_induk'                 => 'required|unique:users,no_induk',
                 ];
                 $messages = [
-                    'nama.required'         => 'Nama Lengkap wajib diisi',
-                    'nama.min'              => 'Nama lengkap minimal 3 karakter',
-                    'nama.max'              => 'Nama lengkap maksimal 35 karakter',
+                    'nama.required'         => 'Nama siswa wajib diisi',
+                    'nama.min'              => 'Nama siswa minimal 3 karakter',
+                    'nama.max'              => 'Nama siswa maksimal 35 karakter',
                     'email.required'        => 'Email wajib diisi',
                     'email.email'           => 'Email tidak valid',
                     'email.unique'          => 'Email sudah terdaftar',

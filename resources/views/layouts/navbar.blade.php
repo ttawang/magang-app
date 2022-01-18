@@ -13,21 +13,21 @@
   <!-- Right navbar links -->
   <ul class="navbar-nav ml-auto">
     <li class="nav-item">
-      <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+      <a class="nav-link" data-widget="fullscreen" href="#" type="button">
         <i class="fas fa-expand-arrows-alt"></i>
       </a>
     </li>
     <!-- Notifications Dropdown Menu -->
-    <li class="nav-item dropdown">
-      <a class="nav-link" data-toggle="dropdown" href="#">
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="dropdown" href="#"3>
         <i class="fas fa-user"></i>
       </a>
-      <div class="dropdown-menu dropdown-menu-md dropdown-menu-right">
+      <div class="dropdown-menu  dropdown-menu-right" >
         <a href="{{url('#')}}" class="dropdown-item">
-          <i class="fas fa-pen mr-2"></i>Edit Profile
+          <i class="fas fa-pen mr-2"></i>&ensp;Edit Profile
         </a>
         <a href="{{url('logout')}}" class="dropdown-item">
-            <i class="fas fa-arrow-left mr-2"></i>Log Out
+            <i class="fas fa-arrow-left mr-2"></i>&ensp;Log Out
           </a>
       </div>
     </li>

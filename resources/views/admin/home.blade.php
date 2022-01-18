@@ -1,68 +1,197 @@
 @extends('layouts.app')
 
 @section('content')
-
-    
-<div class="content-header">
+<style type="text/css">
+	.datepicker {
+	    z-index: 9999 !important;
+	}
+</style>
+<div class="content-header" style="padding-bottom: 3px;">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <i class="mr-1"></i>Test
+          <div class="col-12">
+            <div class="callout callout-info">
+              <h5><i class="fas fa-info"></i> Perhatian:</h5>
+              @if ($cek < 1)
+                Periode belum ditambahkan. Harap tambahkan periode terlebih dahulu. <br>
+                <button type="button" class="btn btn-sm btn-info" id="btn_tambah_periode" style="margin-right: 5px;"><i class="far fa-calendar-plus"></i> Tambah Periode</button>
+              @else
+                Harap laksanakan prakerin sesuai tanggal yang telah ditentukan.
+              @endif
+            </div>
+
+            @if ($cek > 0)
+            <!-- Main content -->
+            <div class="invoice p-3 mb-3" id="periode">
+              <!-- title row -->
+              <div class="row">
+                <div class="col-12">
+                  <h4>
+                    <i class="far fa-calendar-alt"></i> Periode Prakerin
+                    {{-- <small class="float-right">Date: 2/10/2014</small> --}}
+                  </h4>
+                </div>
+                <!-- /.col -->
+              </div>
+              <!-- info row -->
+              <div class="row invoice-info">
+                <div class="col-sm-4 invoice-col">
+                  <address>
+                      <br>
+                      <strong>Tanggal Dimulai:</strong><br>
+                      <h1>{{ text_date($periode->tglmulai) }}</h1><br>
+                      <strong>Tanggal Berakhir:</strong><br>
+                      <h1>{{ text_date($periode->tglselesai) }}</h1><br>
+                      {{-- <code class="">Harap laksanakan prakerin sesuai tanggal yang telah ditentukan</code> --}}
+                  </address>
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-4 invoice-col">
+                  <br>
+                  <address>
+                    <strong>Contact us:</strong><br>
+                    Jl. Kusuma Bangsa No.48<br>
+                    Malang, Jawa Timur<br>
+                    <b>Phone:</b> (555) 539-1037<br>
+                    <b>Email:</b> john.doe@example.com
+                  </address>
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-4 invoice-col">
+                  <b>Durasi Prakerin:</b><br>
+                  <h1>{{ count_date($periode->tglmulai,$periode->tglselesai) }} Hari</h1>
+                  <br>
+                  <b>Durasi Tersisa:</b>
+                    @if (count_date(now_date(),$periode->tglselesai) < 0)
+                        <h1 class="text-danger">Periode telah selesai</h1>
+                    @elseif(count_date(now_date(),$periode->tglselesai) == 0)
+                        <h1 class="text-danger">Hari terakhir</h1>
+                    @else
+                        <h1 class="text-danger">{{ count_date(now_date(),$periode->tglselesai) }} Hari</h1>
+                    @endif
+                </div>
+                <!-- /.col -->
+              </div>
+              <!-- /.row -->
+
+
+              <!-- this row will not appear when printing -->
+              <div class="row no-print">
+                <div class="col-12">
+                    @if (Auth::user()->role == "admin")
+                        <button type="button" id="btn_akhiri" class="btn btn-danger float-right" style="margin-right: 5px;"><i class="far fa-clock"></i> Akhiri Periode</button>
+                        <button type="button" id="btn_mulaibaru" class="btn btn-warning float-right" style="margin-right: 5px;"><i class="far fa-clock"></i> Mulai Periode Baru</button>
+                        <button type="button" id="btn_edit" class="btn btn-success float-right" style="margin-right: 5px;"><i class="far fa-credit-card"></i> Edit Periode</button>
+                    @endif
+                </div>
+              </div>
+            </div>
+            @endif
+            <!-- /.invoice -->
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div>
+</div>
+
+<div class="modal fade" id="modal_tambah_data" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal_tambah_dataLabel">Tambah Data Periode</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="form_tambah">
+                @csrf
+                    <input type="hidden" name="id" value="{{ ($periode != null) ? $periode->id : '' }}">
+                    <input type="hidden" name="mulaibaru">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label text-secondary">Nama Periode</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="nama_periode" placeholder="Nama Periode"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label text-secondary">Tanggal Mulai</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control datetimepicker-input datepick" data-toggle="datetimepicker" data-target="datepick" name="tglmulai"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label text-secondary">Tanggal Akhir</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control datetimepicker-input datepick" data-toggle="datetimepicker" data-target="datepick" name="tglselesai"/>
+                            </div>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <table id="yajra-datatable" class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Username</th>
-                                    <th>Phone</th>
-                                    <th>DOB</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                            </tbody>
-                            </table>
-                    </div>
-                </div>
             </div>
+            <div class="modal-footer">
+                <button type="button" id="btn_close" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="btn_simpan" class="btn btn-primary">Save</button>
+            </div>
+                </form>
         </div>
     </div>
 </div>
-
-<script type="text/javascript" src="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.11.2/af-2.3.7/b-2.0.0/b-colvis-2.0.0/b-html5-2.0.0/b-print-2.0.0/cr-1.5.4/date-1.1.1/fc-3.3.3/fh-3.1.9/kt-2.6.4/r-2.2.9/rg-1.1.3/rr-1.2.8/sc-2.0.5/sb-1.2.1/sp-1.4.0/sl-1.3.3/datatables.min.js"></script>
-
 <script type="text/javascript">
-  $(function () {
-    
-    var table = $('#yajra-datatable').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: "{{ url('home/get_data') }}",
-        columns: [
-            {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'name', name: 'name'},
-            {data: 'email', name: 'email'},
-            {data: 'username', name: 'username'},
-            {data: 'phone', name: 'phone'},
-            {data: 'dob', name: 'dob'},
-            {
-                data: 'action', 
-                name: 'action', 
-                orderable: true, 
-                searchable: true
-            },
-        ]
+$(document).ready(function () {
+    var id = $("[name=id]");
+    $("#modal_tambah_data").on("hidden.bs.modal", function(){
+        $('[name=nama_periode]').val('');
+        $('[name=tglmulai]').val(now_date());
+        $('[name=tglselesai]').val(now_date());
     });
-    
-  });
-</script>
+    $("#btn_tambah_periode").click(function(){
+        $("#modal_tambah_data").modal("show");
+    });
+    $('body').on('click', '#btn_mulaibaru', function () {
+        $('[name=mulaibaru]').val('yes');
+        $("#modal_tambah_data").modal("show");
+    });
+    $('body').on('click', '#btn_edit', function () {
+        var id = $("[name=id]").val();
+        $.get("{{ url('home/edit') }}"+'/'+id, function (data) {
+            $('[name=id]').val(data.id);
+            $('[name=tglmulai]').val(formattanggal(data.tglmulai));
+            $('[name=tglselesai]').val(formattanggal(data.tglselesai));
+            $('[name=nama_periode]').val(data.nama_periode);
+            $("#modal_tambah_data").modal("show");
+        })
+    });
+    $("#btn_simpan").click(function(){
+        $.ajax({
+            url: "{{ url('home/simpan')}} ",
+            type:'POST',
+            data: $("#form_tambah").serialize(),
+            headers : {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(respon){
+				if(respon.status == 1 || respon.status == "1"){
+					$("#modal_tambah_data").modal('hide');
+                    Swal.fire({
+                        title: 'Berhasil',
+                        text: 'Data berhasil diperbarui.',
+                        icon: "success"
+                    }).then((result) => {
+                        location.reload();
+                    })
+				}else{
+                    Swal.fire({
+                        title: 'Gagal',
+                        text: 'Data gagal diperbarui.',
+                        icon: "error"
+                    }).then((result) => {
+                        location.reload();
+                    })
+				}
+			}
+        });
+    });
+});
 
+</script>
 @endsection
