@@ -53,7 +53,7 @@ class HomeController extends Controller
 		}
         return response()->json($arr);
     }
-    public function mulaibaru($id)
+    public function akhiri($id)
     {
         DB::table('periode')->where('id',$id)->update(['status'=>'off','updated_at'=>now_date_full()]);
     }

@@ -64,23 +64,13 @@
             <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="{{url('admin_kelompok')}}" class="nav-link">
-                    <i class="nav-icon fas fa-building mr-2"></i><p>&ensp;Kelompok</p>
+                    <i class="nav-icon fas fa-users mr-2"></i><p>&ensp;Kelompok</p>
                 </a>
               </li>
             </ul>
           </li>
 
         @elseif (Auth::user()->role == "siswa")
-        <li class="nav-item menu-open">
-            <ul class="nav nav-treeview">
-                <li class="nav-item">
-                <!--a href="./index.html" class="nav-link active"-->
-                <a href="{{url('home')}}" class="nav-link">
-                    <i class="nav-icon fas fa-home mr-2"></i><p>&ensp;Dashboard</p>
-                </a>
-                </li>
-            </ul>
-        </li>
         <li class="nav-item menu-open">
             <ul class="nav nav-treeview">
                 <li class="nav-item">

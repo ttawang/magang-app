@@ -8,7 +8,12 @@
         <div class="card card-default">
             <div class="card-body">
                 <div class="ribbon-wrapper ribbon-xl">
-                    <div class="ribbon bg-danger">Menunggu Konfirmasi</div>
+                    @if ($perusahaan->konfirmasi == "yes")
+                        <div class="ribbon bg-info">Telah di-Konfirmasi</div>
+                    @else
+                        <div class="ribbon bg-danger">Menunggu Konfirmasi</div>
+                    @endif
+
                     </div>
 
                 <div class="row">
@@ -105,7 +110,7 @@
 
                             </tbody>
                             </table>
-                            @if (count_date(now_date(),$periode->tglmulai) >= 0)
+                            @if ((count_date(now_date(),$periode->tglmulai) >= 0) && ($perusahaan->konfirmasi == "no"))
                             <div class="row">
                                 <div class="col align-self-end text-right">
                                     <button type="button" class="delete btn btn-danger btn-sm" id="btn_keluar"><i class="fas fa-caret-square-left"></i> Keluar Dari Kelompok</button>

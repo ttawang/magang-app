@@ -28,6 +28,7 @@
                 <div class="col-12">
                   <h4>
                     <i class="far fa-calendar-alt"></i> Periode Prakerin
+                    <input type="hidden" name="id" value="{{ ($periode != null) ? $periode->id : '' }}">
                     {{-- <small class="float-right">Date: 2/10/2014</small> --}}
                   </h4>
                 </div>
@@ -150,6 +151,29 @@ $(document).ready(function () {
     $('body').on('click', '#btn_mulaibaru', function () {
         $('[name=mulaibaru]').val('yes');
         $("#modal_tambah_data").modal("show");
+    });
+    $('body').on('click', '#btn_akhiri', function () {
+        Swal.fire({
+        title: 'Akhiri Peridode',
+        text: "Anda yakin akan mengakhiri periode ?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Akhiri'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var id = $('[name=id]').val();
+                $.get("{{ url('home/akhiri') }}"+'/'+id);
+                Swal.fire({
+                    title: 'Berhasil Mengakhiri',
+                    text: 'Periode telah diakhiri, masukkan periode baru untuk memulai',
+                    icon: "success"
+                }).then((result) => {
+                    location.reload();
+                })
+            }
+        })
     });
     $('body').on('click', '#btn_edit', function () {
         var id = $("[name=id]").val();

@@ -9,25 +9,21 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">
-                            <i class="mr-1"></i>Daftar Perusahaan
+                            <i class="mr-1"></i>Daftar Kelompok
 
                         </div>
                     </div>
                     <div class="card-body">
-                        <button type="button" class="btn btn-primary" id="btn_tambah">Tambah</button>
-                        <p>
                         <table id="tabel_perusahaan" class="table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th >No</th>
-                                    <th >Nama</th>
+                                    <th>No</th>
+                                    <th>Kelompok Perusahaan</th>
                                     <th>Email</th>
-                                    <th >No Telp</th>
-                                    <th >Alamat</th>
-                                    <th>Kuota</th>
-                                    <th >Sisa Kuota</th>
-                                    <th >Status</th>
-                                    <th >Aksi</th>
+                                    <th>No Telp</th>
+                                    <th>Alamat</th>
+                                    <th>Pendaftar</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -41,11 +37,11 @@
     </div>
 </div>
 
-<div class="modal fade" id="modal_tambah_data" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+{{-- <div class="modal fade" id="modal_data" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modal_tambah_dataLabel">Tambah Data Perusahaan</h5>
+                <h5 class="modal-title" id="modal_dataLabel">Tambah Data Perusahaan</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -98,7 +94,76 @@
             </div>
             <div class="modal-footer">
                 <button type="button" id="btn_close" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" id="btn_simpan" class="btn btn-primary">Save</button>
+                <button type="button" id="btn_simpan" class="btn btn-primary">Konfirmasi Pendaftaran</button>
+            </div>
+                </form>
+        </div>
+    </div>
+</div> --}}
+<div class="modal fade" id="modal_data" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal_dataLabel">Tambah Data Perusahaan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="form_tambah">
+                @csrf
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <p class="col-sm-3 text-secondary"><b>Perusahaan :</b></p>
+                                <div class="col-sm-8">
+                                    <p class="text-secondary text-justify" id="nama"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <p class="col-sm-3 text-secondary"><b>Email :</b></p>
+                                <div class="col-sm-8">
+                                    <p class="text-secondary text-justify" id="email"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <p class="col-sm-3 text-secondary"><b>No. Telp :</b></p>
+                                <div class="col-sm-8">
+                                    <p class="text-secondary text-justify" id="no_telp"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <p class="col-sm-3 text-secondary"><b>Alamat :</b></p>
+                                <div class="col-sm-8">
+                                    <p class="text-secondary text-justify" id="alamat"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <table id="tabel_kelompok" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th >No</th>
+                                <th >Nama</th>
+                                <th>Email</th>
+                                <th>Kelas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btn_close" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="btn_acc" data-id="" class="btn btn-primary">Konfirmasi Pendaftaran</button>
+                <button type="button" id="btn_batal" data-id="" class="btn btn-warning">Batal Konfirmasi</button>
             </div>
                 </form>
         </div>
@@ -114,101 +179,113 @@ $(document).ready(function () {
         "paging": true,
         "lengthChange": true,
         "searching": true,
-        "ordering": true,
+        // "ordering": true,
         "info": true,
         "autoWidth": false,
         "responsive": true,
 
-        ajax: "{{ url('admin_perusahaan/get_data') }}",
+        ajax: "{{ url('admin_kelompok/get_data') }}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'nama', name: 'nama'},
             {data: 'email', name: 'email'},
             {data: 'no_telp', name: 'no_telp'},
             {data: 'alamat', name: 'alamat'},
-            {data: 'kuota', name: 'kuota'},
-            {data: 'sisakuota', name: 'sisakuota'},
-            {data: 'status', name: 'staus'},
+            {data: 'pendaftar', name: 'pendaftar'},
             {data: 'action', name: 'action', orderable: true, searchable: true
             },
         ],
-        columnDefs: [
-            { className: 'text-right', targets: [] },
-            { className: 'text-center', targets: [5,6] },
-            // { width:500, target:[0]},
-	    ],
-        "order": [[ 6, "desc" ]],
+        // columnDefs: [
+        //     { className: 'text-right', targets: [] },
+        //     { className: 'text-center', targets: [5,6] },
+        //     // { width:500, target:[0]},
+	    // ],
+        // "order": [[ 6, "asc" ]],
+        "rowCallback": function( row, data ) {
+            if ( data.pendaftar == 0 ) {
+                $(row).hide();
+            }
+        }
+
     });
-    $("#modal_tambah_data").on("hidden.bs.modal", function(){
+    function kelompok(id){
+        tb2 = $('#tabel_kelompok').DataTable({
+            // processing: true,
+            // serverSide: true,
+            paging: false,
+            "lengthChange": false,
+            searching: false,
+            "ordering": false,
+            "info": false,
+            "autoWidth": false,
+            "responsive": true,
+            ajax: "{{ url('admin_kelompok/get_data_kelompok') }}"+"/"+id,
+            columns: [
+                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'nama', name: 'nama'},
+                {data: 'email', name: 'email'},
+                {data: 'nama_kelas', name: 'nama_kelas'},
+            ],
+        });
+    }
+    $("#modal_data").on("hidden.bs.modal", function(){
         $(this).find("input,textarea").val('').end().find("input[type=checkbox], input[type=radio]").prop("checked", "").end();
         $(".select-cari-modal").val(0).trigger('change') ;
+        tb2.destroy();
     });
 
     //SHOW MODAL/FORM
     $("#btn_tambah").click(function(){
-        $("#modal_tambah_data").modal("show");
+        $("#modal_data").modal("show");
     });
 
     //ShOW MODAL/FORM DENGAN GETTING DATA BERDASARKAN ID
-    $('body').on('click', '#btn_edit', function () {
+    $('body').on('click', '#btn_konfirmasi', function () {
         var id = $(this).data('id');
-        $.get("{{ url('admin_perusahaan/edit') }}"+'/'+id, function (data) {
-            $("#modal_tambah_data").modal("show");
-            $('[name=id]').val(data.id);
-            $('[name=nama]').val(data.nama);
-            $('[name=email]').val(data.email);
-            $('[name=no_telp]').val(data.no_telp);
-            $('[name=alamat]').val(data.alamat);
-            $('[name=kuota]').val(data.kuota);
-            $('[name=status]').val(data.recommended).trigger('change');
-        })
-    });
+        $('#btn_acc').show();
+        $('#btn_batal').hide();
 
-    //MELAKUKAN CONTROLLER SIMPAN
-    $("#btn_simpan").click(function(){
-        $.ajax({
-            url: "{{ url('admin_perusahaan/simpan')}} ",
-            type:'POST',
-            data: $("#form_tambah").serialize(),
-            headers : {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(respon){
-				if(respon.status == 1 || respon.status == "1"){
-					$("#modal_tambah_data").modal('hide');
-                    Swal.fire({
-                        title: 'Berhasil',
-                        text: 'Data berhasil diperbarui.',
-                        type: "success"
-                    }).then((result) => {
-                        tb.ajax.reload();
-                    })
-				}else if(respon.status == 2 || respon.status == "2"){
-                    var values = '';
-                    jQuery.each(respon.errors, function (key, value) {
-                        values += value+"<br>"
-                    });
-                    Swal.fire({
-                        title: "Perhatian !!",
-                        icon: 'warning',
-                        html: values,
-                        timer: 5000,
-                        showConfirmButton: false,
-                        type: "error",
-                        width: '300px'
-                    })
-                }
-                else{
-                    Swal.fire({
-                        title: 'Gagal',
-                        text: 'Data gagak diperbarui.',
-                        type: "error"
-                    }).then((result) => {
-                        tb.ajax.reload();
-                    })
-				}
-			}
+        $.get("{{ url('admin_kelompok/show') }}"+'/'+id, function (data) {
+            $("#modal_data").modal("show");
+            // $('[name=id]').val(data.id);
+            $('#nama').html(data.nama);
+            $('#email').html(data.email);
+            $('#no_telp').html(data.no_telp);
+            $('#alamat').html(data.alamat);
+            $('#btn_acc').data('id',data.id);
         });
+        kelompok(id);
+
+    });
+    $('body').on('click', '#btn_batal_konfirmasi', function () {
+        var id = $(this).data('id');
+        $('#btn_acc').hide();
+        $('#btn_batal').show();
+
+        $.get("{{ url('admin_kelompok/show') }}"+'/'+id, function (data) {
+            $("#modal_data").modal("show");
+            // $('[name=id]').val(data.id);
+            $('#nama').html(data.nama);
+            $('#email').html(data.email);
+            $('#no_telp').html(data.no_telp);
+            $('#alamat').html(data.alamat);
+            $('#btn_acc').data('id',data.id);
+            $('#btn_batal').data('id',data.id);
+        });
+        kelompok(id);
+
+    });
+    $('body').on('click', '#btn_acc', function () {
+        var id = $(this).data('id');
+        $.get("{{ url('admin_kelompok/konfirmasi') }}"+'/'+id);
+        $("#modal_data").modal('hide');
+        tb.ajax.reload();
+    });
+    $('body').on('click', '#btn_batal', function () {
+        var id = $(this).data('id');
+        $.get("{{ url('admin_kelompok/batal_konfirmasi') }}"+'/'+id);
+        $("#modal_data").modal('hide');
+        tb.ajax.reload();
     });
 
     $('body').on('click', '#btn_hapus', function () {
@@ -223,7 +300,7 @@ $(document).ready(function () {
         }).then((result) => {
             if (result.isConfirmed) {
                 var id = $(this).data('id');
-                $.get("{{ url('admin_perusahaan/hapus') }}"+'/'+id);
+                $.get("{{ url('admin_kelompok/hapus') }}"+'/'+id);
                 Swal.fire({
                     title: 'Deleted!',
                     text: 'Data telah dihapus.',

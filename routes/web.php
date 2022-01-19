@@ -35,7 +35,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('home', [HomeController::class, 'index'])->name('home');
     Route::post('home/simpan', [HomeController::class, 'simpan']);
     Route::get('home/get_data', [HomeController::class, 'get_data']);
-    Route::get('home/mulaibaru/{id}', [HomeController::class, 'akhiri']);
+    Route::get('home/akhiri/{id}', [HomeController::class, 'akhiri']);
     Route::get('home/edit/{id}', [HomeController::class, 'edit']);
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -66,6 +66,11 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('admin_kelompok', [AdminKelompokController::class, 'index']);
         Route::get('admin_kelompok/get_data', [AdminKelompokController::class, 'get_data']);
+        Route::get('admin_kelompok/simpan', [AdminKelompokController::class, 'simpan']);
+        Route::get('admin_kelompok/get_data_kelompok/{id}', [AdminKelompokController::class, 'get_data_kelompok']);
+        Route::get('admin_kelompok/show/{id}', [AdminKelompokController::class, 'show']);
+        Route::get('admin_kelompok/konfirmasi/{id}', [AdminKelompokController::class, 'konfirmasi']);
+        Route::get('admin_kelompok/batal_konfirmasi/{id}', [AdminKelompokController::class, 'batal_konfirmasi']);
     });
     Route::middleware('guru')->group(function () {
 
