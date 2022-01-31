@@ -93,6 +93,31 @@
         </div><!-- /.row -->
       </div>
 </div>
+<div class="content" style="padding-bottom: 3px;">
+    <div class="container-fluid">
+        <div class="card card-success">
+            <div class="card-header">
+              <h3 class="card-title">Bar Chart</h3>
+
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="chart"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                <canvas id="canvas" height="200" width="600"></canvas>
+              </div>
+            </div>
+            <!-- /.card-body -->
+          </div>
+    </div>
+
+</div>
 
 <div class="modal fade" id="modal_tambah_data" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md" role="document">
@@ -215,6 +240,67 @@ $(document).ready(function () {
 			}
         });
     });
+    var url = "{{url('home/chart')}}";
+    var Years = new Array();
+    var Labels = new Array();
+    var Prices = new Array();
+
+    $.get(url, function(response){
+        response.forEach(function(data){
+            Years.push(data.stockYear);
+            Labels.push(data.stockName);
+            Prices.push(data.stockPrice);
+        });
+        var ctx = $('#canvas').get(0).getContext('2d')
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels:Years,
+                datasets: [{
+                    label: 'Jumlah Siswa',
+                    data: Prices,
+                    borderWidth: 1,
+                    backgroundColor: "rgba(154, 208, 236)"
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            },
+
+        });
+    });
+
+
+
+    //-------------
+    //- BAR CHART -
+    //-------------
+    var barChartCanvas = $('#barChart').get(0).getContext('2d')
+    var barChartData = $.extend(true, {}, areaChartData)
+    var temp0 = areaChartData.datasets[0]
+    var temp1 = areaChartData.datasets[1]
+    barChartData.datasets[0] = temp1
+    barChartData.datasets[1] = temp0
+
+    var barChartOptions = {
+      responsive              : true,
+      maintainAspectRatio     : false,
+      datasetFill             : false
+    }
+
+    new Chart(barChartCanvas, {
+      type: 'bar',
+      data: barChartData,
+      options: barChartOptions
+    })
+
+
 });
 
 </script>

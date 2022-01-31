@@ -136,5 +136,11 @@
 <script src="{{ url('AdminLTE-3.1.0/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
 <!-- SweetAlert2 -->
 <script src="{{ url('AdminLTE-3.1.0/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+<!-- FLOT CHARTS -->
+<script src="{{ url('AdminLTE-3.1.0/plugins/flot/jquery.flot.js') }}"></script>
+<!-- FLOT RESIZE PLUGIN - allows the chart to redraw when the window is resized -->
+<script src="{{ url('AdminLTE-3.1.0/plugins/jquery.flot.resize.js') }}"></script>
+<!-- ChartJS -->
+<script src="{{ url('AdminLTE-3.1.0/plugins/chart.js/Chart.min.js') }}"></script>
 </body>
 </html>

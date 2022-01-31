@@ -201,11 +201,11 @@ $(document).ready(function () {
         //     // { width:500, target:[0]},
 	    // ],
         // "order": [[ 6, "asc" ]],
-        "rowCallback": function( row, data ) {
-            if ( data.pendaftar == 0 ) {
-                $(row).hide();
-            }
-        }
+        // "rowCallback": function( row, data ) {
+        //     if ( data.pendaftar == 0 ) {
+        //         $(row).hide();
+        //     }
+        // }
 
     });
     function kelompok(id){

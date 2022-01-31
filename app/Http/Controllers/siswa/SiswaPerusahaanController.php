@@ -14,18 +14,20 @@ class SiswaPerusahaanController extends Controller
     //
     public function index()
     {
-        $cek = DB::table('kelompok')->where('id_user', Auth::user()->id)->count();
+        $periode = DB::table('periode')->where('status','on')->pluck('id');
+        $cek = DB::table('kelompok')->where('id_user', Auth::user()->id)->where('id_periode',$periode)->count();
 
         $data['judul'] = 'Daftar Perusahaan';
 
         if($cek > 0){
             $data['perusahaan'] = DB::table('kelompok as k')
+                                    ->where('id_periode',$periode)
                                     ->join('perusahaan as p','k.id_perusahaan','p.id')
                                     // ->select(DB::raw('p.*'))
                                     ->where('id_user', Auth::user()->id)->first();
             $kuota = $data['perusahaan']->kuota;
 
-            $data['sisakuota'] = $kuota - DB::table('kelompok')->where('id_perusahaan',$data['perusahaan']->id_perusahaan)->count();
+            $data['sisakuota'] = $kuota - DB::table('kelompok')->where('id_periode',$periode)->where('id_perusahaan',$data['perusahaan']->id_perusahaan)->count();
             $data['periode'] = DB::table('periode')->where('status','on')->first();
 
             return view('siswa.perusahaan', $data);
@@ -51,7 +53,8 @@ class SiswaPerusahaanController extends Controller
                 return $status;
             })
             ->addColumn('action', function($row){
-                $sisakuota = $row->kuota - DB::table('kelompok')->where('id_perusahaan',$row->id)->count();
+                $periode = DB::table('periode')->where('status','on')->pluck('id');
+                $sisakuota = $row->kuota - DB::table('kelompok')->where('id_perusahaan',$row->id)->where('id_periode',$periode)->count();
                 if($sisakuota < 1){
                     $actionBtn = '<button type="button" class="edit btn btn-danger btn-sm" disabled>Penuh</button>';
                 }else{
@@ -68,7 +71,8 @@ class SiswaPerusahaanController extends Controller
                 return $actionBtn;
             })
             ->addColumn('sisakuota', function($row){
-                $sisakuota = $row->kuota - DB::table('kelompok')->where('id_perusahaan',$row->id)->count();
+                $periode = DB::table('periode')->where('status','on')->pluck('id');
+                $sisakuota = $row->kuota - DB::table('kelompok')->where('id_perusahaan',$row->id)->where('id_periode',$periode)->count();
 
                 return $sisakuota;
             })
@@ -78,7 +82,9 @@ class SiswaPerusahaanController extends Controller
     public function daftarkelompok()
     {
         $cek = DB::table('kelompok')->where('id_user', Auth::user()->id)->pluck('id_perusahaan');
+        $periode = DB::table('periode')->where('status','on')->pluck('id');
         $data = DB::table('kelompok as kel')
+            ->where('id_periode',$periode)
             ->join('siswa as s','kel.id_user','s.id_user')
             ->join('users as u','kel.id_user','u.id')
             ->leftjoin('kelas as k','s.id_kelas','k.id')
@@ -120,6 +126,7 @@ class SiswaPerusahaanController extends Controller
     }
     public function keluar($id)
     {
-        DB::table('kelompok')->where('id_user', $id)->delete();
+        $periode = DB::table('periode')->where('status','on')->pluck('id');
+        DB::table('kelompok')->where('id_user', $id)->where('id_periode',$periode)->delete();
     }
 }

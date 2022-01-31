@@ -41,7 +41,8 @@ class PerusahaanController extends Controller
                     return $actionBtn;
                 })
                 ->addColumn('sisakuota', function($row){
-                    $sisakuota = $row->kuota - DB::table('kelompok')->where('id_perusahaan',$row->id)->count();
+                    $periode = DB::table('periode')->where('status','on')->pluck('id');
+                    $sisakuota = $row->kuota - DB::table('kelompok')->where('id_periode',$periode)->where('id_perusahaan',$row->id)->count();
 
                     return $sisakuota;
                 })

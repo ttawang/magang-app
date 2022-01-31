@@ -35,6 +35,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('home', [HomeController::class, 'index'])->name('home');
     Route::post('home/simpan', [HomeController::class, 'simpan']);
     Route::get('home/get_data', [HomeController::class, 'get_data']);
+    Route::get('home/chart', [HomeController::class, 'chart']);
+    Route::get('home/chartperiode', [HomeController::class, 'chartperiode']);
     Route::get('home/akhiri/{id}', [HomeController::class, 'akhiri']);
     Route::get('home/edit/{id}', [HomeController::class, 'edit']);
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');

@@ -17,12 +17,23 @@ class KelompokController extends Controller
     }
     public function get_data()
     {
-        $data = DB::table('perusahaan')->orderBy('id','desc')->get();
+        $periode = DB::table('periode')->where('status','on')->pluck('id');
+        if($periode->count() > 0){
+            $kelompok = DB::table('kelompok')->where('id_periode',$periode)->select(DB::raw('id_perusahaan'))->groupBy('id_perusahaan')->pluck('id_perusahaan');
+            if($kelompok->count() > 0){
+                $data = DB::table('perusahaan')->whereIn('id', [$kelompok])->orderBy('id','desc')->get();
+            }else{
+                $data  = [];
+            }
+        }else{
+            $data = [];
+        }
 
         return Datatables::of($data)
             ->addIndexColumn()
             ->addColumn('action', function($row){
-                $kelompok = DB::table('kelompok')->where('id_perusahaan',$row->id)->first();
+                $periode = DB::table('periode')->where('status','on')->pluck('id');
+                $kelompok = DB::table('kelompok')->where('id_periode',$periode)->where('id_perusahaan',$row->id)->first();
                 if($kelompok->konfirmasi == "no"){
                     $actionBtn =
                     '<button type="button" class="edit btn btn-info btn-sm" id="btn_konfirmasi" data-id="'.$row->id.'" data-toggle="tooltip" data-placement="top" title="Konfirmasi Pendaftaran"><i class="fas fa-check"></i>'.
@@ -37,7 +48,8 @@ class KelompokController extends Controller
                 return $actionBtn;
             })
             ->addColumn('pendaftar', function($row){
-                $sisakuota = DB::table('kelompok')->where('id_perusahaan',$row->id)->count();
+                $periode = DB::table('periode')->where('status','on')->pluck('id');
+                $sisakuota = DB::table('kelompok')->where('id_periode',$periode)->where('id_perusahaan',$row->id)->count();
 
                 return $sisakuota;
             })
@@ -48,13 +60,16 @@ class KelompokController extends Controller
         DB::table('kelompok')->where('id_perusahaan',$id)->delete();
     }
     public function konfirmasi($id){
-        DB::table('kelompok')->where('id_perusahaan',$id)->update(["konfirmasi" => "yes"]);
+        $periode = DB::table('periode')->where('status','on')->pluck('id');
+        DB::table('kelompok')->where('id_periode', $periode)->where('id_perusahaan',$id)->update(["konfirmasi" => "yes"]);
     }
     public function batal_konfirmasi($id){
-        DB::table('kelompok')->where('id_perusahaan',$id)->update(["konfirmasi" => "no"]);
+        $periode = DB::table('periode')->where('status','on')->pluck('id');
+        DB::table('kelompok')->where('id_periode',$periode)->where('id_perusahaan',$id)->update(["konfirmasi" => "no"]);
     }
     public function get_data_kelompok($id){
-        $data = DB::table('kelompok as kel')
+        $periode = DB::table('periode')->where('status','on')->pluck('id');
+        $data = DB::table('kelompok as kel')->where('kel.id_periode',$periode)
             ->join('siswa as s','kel.id_user','s.id_user')
             ->join('users as u','kel.id_user','u.id')
             ->leftjoin('kelas as k','s.id_kelas','k.id')

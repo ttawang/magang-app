@@ -62,4 +62,23 @@ class HomeController extends Controller
         $data = DB::table('periode')->where('id',$id)->first();
         return response()->json($data);
     }
+    public function chartperiode()
+    {
+        $periode = DB::table('periode as p')->get();
+        $data = [];
+        foreach($periode as $i){
+            $temp = ["total" => "anu",
+                    "tetel" => "ina"];
+            array_push($data, $temp);
+        }
+        $result = DB::table('stocks')->orderBy('stockYear','asc')->get();
+        dd($result);
+    }
+    public function chart()
+    {
+        $result = DB::table('stocks')->orderBy('stockYear','asc')->get();
+
+        return response()->json($result);
+    }
+
 }
