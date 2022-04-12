@@ -95,22 +95,47 @@
 </div>
 <div class="content" style="padding-bottom: 3px;">
     <div class="container-fluid">
-        <div class="card card-success">
+        <div class="card card-info">
             <div class="card-header">
-              <h3 class="card-title">Bar Chart</h3>
+              <h3 class="card-title">Chart Perusahaan</h3>
 
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                   <i class="fas fa-minus"></i>
                 </button>
-                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                {{-- <button type="button" class="btn btn-tool" data-card-widget="remove">
                   <i class="fas fa-times"></i>
-                </button>
+                </button> --}}
               </div>
             </div>
             <div class="card-body">
               <div class="chart"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                <canvas id="canvas" height="200" width="600"></canvas>
+                <canvas id="chartperusahaan" height="200" width="600"></canvas>
+              </div>
+            </div>
+            <!-- /.card-body -->
+          </div>
+    </div>
+
+</div>
+<div class="content" style="padding-bottom: 3px;">
+    <div class="container-fluid">
+        <div class="card card-info">
+            <div class="card-header">
+              <h3 class="card-title">Chart Periode</h3>
+
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+                {{-- <button type="button" class="btn btn-tool" data-card-widget="remove">
+                  <i class="fas fa-times"></i>
+                </button> --}}
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="chart"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                <canvas id="chartperiode" height="200" width="600"></canvas>
               </div>
             </div>
             <!-- /.card-body -->
@@ -164,6 +189,8 @@
 </div>
 <script type="text/javascript">
 $(document).ready(function () {
+    chartperusahaan();
+    chartperiode();
     var id = $("[name=id]");
     $("#modal_tambah_data").on("hidden.bs.modal", function(){
         $('[name=nama_periode]').val('');
@@ -240,68 +267,82 @@ $(document).ready(function () {
 			}
         });
     });
-    var url = "{{url('home/chart')}}";
-    var Years = new Array();
-    var Labels = new Array();
-    var Prices = new Array();
-
-    $.get(url, function(response){
-        response.forEach(function(data){
-            Years.push(data.stockYear);
-            Labels.push(data.stockName);
-            Prices.push(data.stockPrice);
-        });
-        var ctx = $('#canvas').get(0).getContext('2d')
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels:Years,
-                datasets: [{
-                    label: 'Jumlah Siswa',
-                    data: Prices,
-                    borderWidth: 1,
-                    backgroundColor: "rgba(154, 208, 236)"
-                }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero:true
-                        }
-                    }]
-                }
-            },
-
-        });
-    });
-
-
-
-    //-------------
-    //- BAR CHART -
-    //-------------
-    var barChartCanvas = $('#barChart').get(0).getContext('2d')
-    var barChartData = $.extend(true, {}, areaChartData)
-    var temp0 = areaChartData.datasets[0]
-    var temp1 = areaChartData.datasets[1]
-    barChartData.datasets[0] = temp1
-    barChartData.datasets[1] = temp0
-
-    var barChartOptions = {
-      responsive              : true,
-      maintainAspectRatio     : false,
-      datasetFill             : false
-    }
-
-    new Chart(barChartCanvas, {
-      type: 'bar',
-      data: barChartData,
-      options: barChartOptions
-    })
-
 
 });
+    function chartperiode(){
+        var url = "{{url('home/chartperiode')}}";
+        var Years = new Array();
+        var Labels = new Array();
+        var Prices = new Array();
+
+        $.get(url, function(response){
+            response.forEach(function(data){
+                Years.push(data.nama_periode);
+                Labels.push(data.jumlah);
+                Prices.push(data.jumlah);
+            });
+            var ctx = $('#chartperiode').get(0).getContext('2d')
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels:Years,
+                    datasets: [{
+                        label: 'Jumlah Siswa',
+                        data: Prices,
+                        borderWidth: 1,
+                        backgroundColor: "rgba(154, 208, 236)"
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }]
+                    }
+                },
+
+            });
+        });
+    }
+    function chartperusahaan(){
+        var url = "{{url('home/chartperusahaan')}}";
+        var Years = new Array();
+        var Labels = new Array();
+        var Prices = new Array();
+
+        $.get(url, function(response){
+            response.forEach(function(data){
+                Years.push(data.nama_perusahaan);
+                Labels.push(data.jumlah);
+                Prices.push(data.jumlah);
+            });
+            var ctx = $('#chartperusahaan').get(0).getContext('2d')
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels:Years,
+                    datasets: [{
+                        label: 'Jumlah Siswa',
+                        data: Prices,
+                        borderWidth: 1,
+                        backgroundColor: "rgba(154, 208, 236)"
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }]
+                    }
+                },
+
+            });
+        });
+    }
 
 </script>
 @endsection

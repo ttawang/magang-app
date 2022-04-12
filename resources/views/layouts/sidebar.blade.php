@@ -81,6 +81,27 @@
                 </li>
             </ul>
         </li>
+        <li class="nav-item menu-open">
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                <!--a href="./index.html" class="nav-link active"-->
+                <a href="{{url('siswa_laporan')}}" class="nav-link">
+                    <i class="nav-icon far fa-clipboard mr-2"></i><p>&ensp;Laporan</p>
+                </a>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-item menu-open">
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                <!--a href="./index.html" class="nav-link active"-->
+                <a href="{{url('siswa_laporan')}}" class="nav-link">
+                    <i class="nav-icon fa-solid fa-file-contract mr2"></i><p>&ensp;Sertifikat</p>
+                    {{-- <i class="fa-solid fa-file-contract"></i> --}}
+                </a>
+                </li>
+            </ul>
+        </li>
         @endif
         </ul>
       </nav>

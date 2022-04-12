@@ -42,6 +42,16 @@ function db_date($date){
     $convert = Carbon::createFromFormat('d/m/Y',  $date)->format('Y-m-d');
     return $convert;
 }
+function blade_date($date,$style){
+    if($style === 'd/m/Y'){
+        $convert = Carbon::createFromFormat('Y-m-d',  $date)->format('d/m/Y');
+    }else if($style == 'd-m-Y'){
+        $convert = Carbon::createFromFormat('Y-m-d',  $date)->format('d-m-Y');
+    }else{
+        $convert = $date;
+    }
+    return $convert;
+}
 function now_date_full(){
     $date = Carbon::now();
     return $date;

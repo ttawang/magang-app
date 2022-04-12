@@ -20,7 +20,6 @@ $('.select-cari-modal').select2({
 	theme: 'bootstrap4',
 	dropdownParent : $('.modal'),
 });
-
 function formattanggal (input) {
     var datePart = input.match(/\d+/g),
     // year = datePart[0].substring(4), // get only two digits

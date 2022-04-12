@@ -6,11 +6,15 @@ use App\Http\Controllers\admin\KelasController as AdminKelasController;
 use App\Http\Controllers\admin\PerusahaanController as AdminPerusahaanController;
 use App\Http\Controllers\admin\KelompokController as AdminKelompokController;
 
-use App\Http\Controllers\siswa\SiswaPerusahaanController;
+
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
+
+
+use App\Http\Controllers\siswa\SiswaPerusahaanController;
+use App\Http\Controllers\siswa\SiswaLaporanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +41,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('home/get_data', [HomeController::class, 'get_data']);
     Route::get('home/chart', [HomeController::class, 'chart']);
     Route::get('home/chartperiode', [HomeController::class, 'chartperiode']);
+    Route::get('home/chartperusahaan', [HomeController::class, 'chartperusahaan']);
     Route::get('home/akhiri/{id}', [HomeController::class, 'akhiri']);
     Route::get('home/edit/{id}', [HomeController::class, 'edit']);
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
@@ -68,7 +73,9 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('admin_kelompok', [AdminKelompokController::class, 'index']);
         Route::get('admin_kelompok/get_data', [AdminKelompokController::class, 'get_data']);
+        Route::get('admin_kelompok/get_data_cari/{id}', [AdminKelompokController::class, 'get_data_cari']);
         Route::get('admin_kelompok/simpan', [AdminKelompokController::class, 'simpan']);
+        Route::get('admin_kelompok/cari/{id}', [AdminKelompokController::class, 'cari']);
         Route::get('admin_kelompok/get_data_kelompok/{id}', [AdminKelompokController::class, 'get_data_kelompok']);
         Route::get('admin_kelompok/show/{id}', [AdminKelompokController::class, 'show']);
         Route::get('admin_kelompok/konfirmasi/{id}', [AdminKelompokController::class, 'konfirmasi']);
@@ -83,6 +90,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('siswa_perusahaan/daftar/{id}', [SiswaPerusahaanController::class, 'daftar']);
         Route::get('siswa_perusahaan/keluar/{id}', [SiswaPerusahaanController::class, 'keluar']);
         Route::get('siswa_perusahaan/daftarkelompok', [SiswaPerusahaanController::class, 'daftarkelompok']);
+
+        Route::get('siswa_laporan',[SiswaLaporanController::class,'index']);
+        Route::get('siswa_laporan/get_data',[SiswaLaporanController::class,'get_data']);
+        Route::post('siswa_laporan/simpan',[SiswaLaporanController::class,'simpan']);
+        Route::get('siswa_laporan/edit/{id}',[SiswaLaporanController::class,'edit']);
+        Route::get('siswa_laporan/cetak',[SiswaLaporanController::class,'cetak']);
     });
 
 });

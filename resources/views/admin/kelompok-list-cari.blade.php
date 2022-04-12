@@ -9,8 +9,12 @@
 
               <h5> Periode : {{ $periode->nama_periode }}</h5>
                 <h5>{{ text_date($periode->tglmulai) ." - ".text_date($periode->tglselesai) }}</h5><br>
-
+                <input type="hidden" name="cek" value="{{ $periode->id }}">
                 <button type="button" class="btn btn-sm btn-info" id="btn_cari" style="margin-right: 5px;"><i class="fas fa-search"></i> Cari Periode</button>
+                <a href="{{ url('admin_kelompok') }}">
+                    <button type="button" class="btn btn-sm btn-warning" id="btn_cari" style="margin-right: 5px;"><i class="fas fa-backward"></i></i> Kembali Ke Periode Saat Ini</button>
+                </a>
+
 
             </div>
           </div>
@@ -159,6 +163,7 @@
 <script type="text/javascript">
 $(document).ready(function () {
     //MENAMPILKAN DATA DENGAN DATATABLES
+    id_periode = $('[name=cek]').val();
     var tb = $('#tabel_perusahaan').DataTable({
         processing: true,
         serverSide: true,
@@ -169,8 +174,7 @@ $(document).ready(function () {
         "info": true,
         "autoWidth": false,
         "responsive": true,
-
-        ajax: "{{ url('admin_kelompok/get_data') }}",
+        ajax: "{{ url('admin_kelompok/get_data_cari') }}"+"/"+id_periode,
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'nama', name: 'nama'},
@@ -312,7 +316,7 @@ $(document).ready(function () {
 });
 $("#btn_cari_simpan").click(function(){
     id = $('[name=id_periode]').val();
-    window.location.href = "admin_kelompok/cari"+"/"+id;
+    window.location.href = id;
 });
 
 </script>

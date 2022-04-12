@@ -11,13 +11,64 @@ class KelompokController extends Controller
 {
     //
     public function index(){
-        $data['judul'] = 'Perusahaan';
+        $data['judul'] = 'Kelompok';
+        $data['periode'] = DB::table('periode')->where('status','on')->first();
+        $data['list_periode'] = DB::table('periode')->where('status','!=','on')->orderBy('id','desc')->get();
+
 
         return view('admin.kelompok-list',$data);
+    }
+    public function cari($id){
+        $data['judul'] = 'Cari Kelompok';
+        $data['periode'] = DB::table('periode')->where('id',$id)->first();
+        $data['list_periode'] = DB::table('periode')->where('status','!=','on')->where('id','!=',$id)->orderBy('id','desc')->get();
+
+        return view('admin.kelompok-list-cari',$data);
     }
     public function get_data()
     {
         $periode = DB::table('periode')->where('status','on')->pluck('id');
+        if($periode->count() > 0){
+            $kelompok = DB::table('kelompok')->where('id_periode',$periode)->select(DB::raw('id_perusahaan'))->groupBy('id_perusahaan')->pluck('id_perusahaan');
+            if($kelompok->count() > 0){
+                $data = DB::table('perusahaan')->whereIn('id', [$kelompok])->orderBy('id','desc')->get();
+            }else{
+                $data  = [];
+            }
+        }else{
+            $data = [];
+        }
+
+        return Datatables::of($data)
+            ->addIndexColumn()
+            ->addColumn('action', function($row){
+                $periode = DB::table('periode')->where('status','on')->pluck('id');
+                $kelompok = DB::table('kelompok')->where('id_periode',$periode)->where('id_perusahaan',$row->id)->first();
+                if($kelompok->konfirmasi == "no"){
+                    $actionBtn =
+                    '<button type="button" class="edit btn btn-info btn-sm" id="btn_konfirmasi" data-id="'.$row->id.'" data-toggle="tooltip" data-placement="top" title="Konfirmasi Pendaftaran"><i class="fas fa-check"></i>'.
+                    '</button> <button type="button" class="delete btn btn-danger btn-sm" id="btn_hapus" data-id="'.$row->id.'" data-toggle="tooltip" data-placement="top" title="Hapus Kelompok"><i class="fas fa-trash-alt"></i></button>'.
+                    '<input type="hidden" id="id'.$row->id.'" value="'.$row->id.'">';
+                }else{
+                    $actionBtn =
+                    '<button type="button" class="edit btn btn-warning btn-sm" id="btn_batal_konfirmasi" data-id="'.$row->id.'" data-toggle="tooltip" data-placement="top" title="Batalkan Pendaftaran"><i class="fas fa-backward"></i>'.
+                    '</button> <button type="button" class="delete btn btn-danger btn-sm" id="btn_hapus" data-id="'.$row->id.'" data-toggle="tooltip" data-placement="top" title="Hapus Kelompok"><i class="fas fa-trash-alt"></i></button>'.
+                    '<input type="hidden" id="id'.$row->id.'" value="'.$row->id.'">';
+                }
+                return $actionBtn;
+            })
+            ->addColumn('pendaftar', function($row){
+                $periode = DB::table('periode')->where('status','on')->pluck('id');
+                $sisakuota = DB::table('kelompok')->where('id_periode',$periode)->where('id_perusahaan',$row->id)->count();
+
+                return $sisakuota;
+            })
+            ->rawColumns(['action','status','pendaftar'])
+            ->make(true);
+    }
+    public function get_data_cari($id)
+    {
+        $periode = DB::table('periode')->where('id',$id)->pluck('id');
         if($periode->count() > 0){
             $kelompok = DB::table('kelompok')->where('id_periode',$periode)->select(DB::raw('id_perusahaan'))->groupBy('id_perusahaan')->pluck('id_perusahaan');
             if($kelompok->count() > 0){
