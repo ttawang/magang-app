@@ -15,10 +15,10 @@ class SiswaPerusahaanController extends Controller
     public function index()
     {
         $periode = DB::table('periode')->where('status','on')->pluck('id');
-        $cek = DB::table('kelompok')->where('id_user', Auth::user()->id)->where('id_periode',$periode)->count();
 
         $data['judul'] = 'Daftar Perusahaan';
 
+        $cek = DB::table('kelompok')->where('id_user', Auth::user()->id)->where('id_periode',$periode)->count();
         if($cek > 0){
             $data['perusahaan'] = DB::table('kelompok as k')
                                     ->where('id_periode',$periode)
@@ -36,19 +36,16 @@ class SiswaPerusahaanController extends Controller
 
             return view('siswa.perusahaan-list', $data);
         }
-        // $periode = DB::table('periode')->where('status','on')->pluck('id');
-        // $cek = DB::table('kelompok_detail as kd')->selectRaw('*')->join('kelompok as k','k.id','kd.id_kelompok')->join('siswa as s','s.id','kd.id_siswa')->join('users as u','u.id','s.id_user')->where([['k.id_periode',$periode],['u.id',Auth::user()->id]])->pluck('kd.id_kelompok');
 
-        // $data['judul'] = 'Daftar Perusahaan';
-        // if(count($cek) > 0){
-        //     $data['perusahaan'] = DB::table('kelompok as k')
-        //                             ->join('perusahaan as p','k.id_perusahaan','p.id')
-        //                             // ->select(DB::raw('p.*'))
-        //                             ->where('k.id', $cek)->first();
-
+        // $cek = DB::table('kelompok_detail2 as kd')->join('kelompok2 as k','k.id','kd.id_kelompok')->where([['kd.id_user',Auth::user()->id],['k.id_periode',$periode]])->count();
+        // if($cek > 0){
+        //     $data['perusahaan'] = DB::table('kelompok_detail2 as kd')
+        //     ->join('kelompok2 as k','k.id','kd.id_kelompok')
+        //     ->join('perusahaan as p','p.id','k.id_periode')
+        //     ->where('kd.id_user',Auth::user()->id)->first();
         //     $kuota = $data['perusahaan']->kuota;
 
-        //     $data['sisakuota'] = $kuota - DB::table('kelompok_detail as kd')->join('kelompok as k', 'k.id','kd.id_kelompok')->where('kd.id_kelompok',$cek)->count();
+        //     $data['sisakuota'] = $kuota - DB::table('kelompok')->where('id_periode',$periode)->where('id_perusahaan',$data['perusahaan']->id_perusahaan)->count();
         //     $data['periode'] = DB::table('periode')->where('status','on')->first();
 
         //     return view('siswa.perusahaan', $data);
@@ -57,8 +54,6 @@ class SiswaPerusahaanController extends Controller
 
         //     return view('siswa.perusahaan-list', $data);
         // }
-
-
 
     }
     public function get_data()

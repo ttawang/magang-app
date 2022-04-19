@@ -7,8 +7,42 @@
           <div class="col-12">
             <div class="callout callout-info">
 
-              <h5> Periode : {{ $periode->nama_periode }}</h5>
-                <h5>{{ text_date($periode->tglmulai) ." - ".text_date($periode->tglselesai) }}</h5><br>
+              {{-- <h5> Periode : {{ $periode->nama_periode }}</h5>
+                <h5>{{ text_date($periode->tglmulai) ." - ".text_date($periode->tglselesai) }}</h5><br> --}}
+                <div class="row">
+                    <div class="col"><h5><b>Nama Periode </b></h5></div>
+                    <div class="col-auto"><b>:</b></div>
+                    <div class="col"><h5>{{ $periode->nama_periode }}</h5></div>
+                    <div class="col-auto">
+                        <h5></h5>
+                    </div>
+                    <div class="col"><p><b></b></p></div>
+                    <div class="col-auto"><b></b></div>
+                    <div class="col"><p></p></div>
+                </div>
+                <div class="row">
+                    <div class="col"><h5><b>Tanggal Mulai </b></h5></div>
+                    <div class="col-auto"><b>:</b></div>
+                    <div class="col"><h5>{{ text_date($periode->tglmulai) }}</h5></div>
+                    <div class="col-auto">
+                        <h5></h5>
+                    </div>
+                    <div class="col"><p><b></b></p></div>
+                    <div class="col-auto"><b></b></div>
+                    <div class="col"><p></p></div>
+                </div>
+                <div class="row">
+                    <div class="col"><h5><b>Tanggal Selesai </b></h5></div>
+                    <div class="col-auto"><b>:</b></div>
+                    <div class="col"><h5>{{ text_date($periode->tglselesai) }}</h5></div>
+                    <div class="col-auto">
+                        <h5></h5>
+                    </div>
+                    <div class="col"><p><b></b></p></div>
+                    <div class="col-auto"><b></b></div>
+                    <div class="col"><p></p></div>
+                </div>
+                <br>
                 <input type="hidden" name="cek" value="{{ $periode->id }}">
                 <button type="button" class="btn btn-sm btn-info" id="btn_cari" style="margin-right: 5px;"><i class="fas fa-search"></i> Cari Periode</button>
                 <a href="{{ url('admin_kelompok') }}">
@@ -198,7 +232,7 @@ $(document).ready(function () {
         // }
 
     });
-    function kelompok(id){
+    function kelompok(id,periode){
         tb2 = $('#tabel_kelompok').DataTable({
             // processing: true,
             // serverSide: true,
@@ -209,7 +243,7 @@ $(document).ready(function () {
             "info": false,
             "autoWidth": false,
             "responsive": true,
-            ajax: "{{ url('admin_kelompok/get_data_kelompok') }}"+"/"+id,
+            ajax: "{{ url('admin_kelompok/get_data_kelompok') }}"+"/"+id+"/"+periode,
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'nama', name: 'nama'},
@@ -239,6 +273,7 @@ $(document).ready(function () {
     //ShOW MODAL/FORM DENGAN GETTING DATA BERDASARKAN ID
     $('body').on('click', '#btn_konfirmasi', function () {
         var id = $(this).data('id');
+        var periode = $(this).data('periode');
         $('#btn_acc').show();
         $('#btn_batal').hide();
 
@@ -249,13 +284,14 @@ $(document).ready(function () {
             $('#email').html(data.email);
             $('#no_telp').html(data.no_telp);
             $('#alamat').html(data.alamat);
-            $('#btn_acc').data('id',data.id);
+            $('#btn_acc').data('id',data.id).data('periode',periode);
         });
-        kelompok(id);
+        kelompok(id,periode);
 
     });
     $('body').on('click', '#btn_batal_konfirmasi', function () {
         var id = $(this).data('id');
+        var periode = $(this).data('periode');
         $('#btn_acc').hide();
         $('#btn_batal').show();
 
@@ -266,21 +302,22 @@ $(document).ready(function () {
             $('#email').html(data.email);
             $('#no_telp').html(data.no_telp);
             $('#alamat').html(data.alamat);
-            $('#btn_acc').data('id',data.id);
-            $('#btn_batal').data('id',data.id);
+            $('#btn_batal').data('id',data.id).data('periode',periode);
         });
-        kelompok(id);
+        kelompok(id,periode);
 
     });
     $('body').on('click', '#btn_acc', function () {
         var id = $(this).data('id');
-        $.get("{{ url('admin_kelompok/konfirmasi') }}"+'/'+id);
+        var periode = $(this).data('periode');
+        $.get("{{ url('admin_kelompok/konfirmasi') }}"+'/'+id+"/"+periode);
         $("#modal_data").modal('hide');
         tb.ajax.reload();
     });
     $('body').on('click', '#btn_batal', function () {
         var id = $(this).data('id');
-        $.get("{{ url('admin_kelompok/batal_konfirmasi') }}"+'/'+id);
+        var periode = $(this).data('periode');
+        $.get("{{ url('admin_kelompok/batal_konfirmasi') }}"+'/'+id+"/"+periode);
         $("#modal_data").modal('hide');
         tb.ajax.reload();
     });
@@ -297,7 +334,8 @@ $(document).ready(function () {
         }).then((result) => {
             if (result.isConfirmed) {
                 var id = $(this).data('id');
-                $.get("{{ url('admin_kelompok/hapus') }}"+'/'+id);
+                var periode = $(this).data('periode');
+                $.get("{{ url('admin_kelompok/hapus') }}"+'/'+id+"/"+periode);
                 Swal.fire({
                     title: 'Deleted!',
                     text: 'Data telah dihapus.',
@@ -317,6 +355,13 @@ $(document).ready(function () {
 $("#btn_cari_simpan").click(function(){
     id = $('[name=id_periode]').val();
     window.location.href = id;
+});
+
+$('body').on('click', '#btn_detail', function () {
+    var id = $(this).data('id');
+    var periode = $(this).data('periode');
+    // window.location.href = "/admin_kelompok/detail"+"/"+id+"/"+periode;
+    window.open("/admin_kelompok/detail"+"/"+id+"/"+periode, '_blank');
 });
 
 </script>

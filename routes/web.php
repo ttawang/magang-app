@@ -76,10 +76,13 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('admin_kelompok/get_data_cari/{id}', [AdminKelompokController::class, 'get_data_cari']);
         Route::get('admin_kelompok/simpan', [AdminKelompokController::class, 'simpan']);
         Route::get('admin_kelompok/cari/{id}', [AdminKelompokController::class, 'cari']);
-        Route::get('admin_kelompok/get_data_kelompok/{id}', [AdminKelompokController::class, 'get_data_kelompok']);
+        Route::get('admin_kelompok/hapus/{id}/{periode}', [AdminKelompokController::class, 'hapus']);
+        Route::get('admin_kelompok/get_data_kelompok/{id}/{periode}', [AdminKelompokController::class, 'get_data_kelompok']);
         Route::get('admin_kelompok/show/{id}', [AdminKelompokController::class, 'show']);
-        Route::get('admin_kelompok/konfirmasi/{id}', [AdminKelompokController::class, 'konfirmasi']);
-        Route::get('admin_kelompok/batal_konfirmasi/{id}', [AdminKelompokController::class, 'batal_konfirmasi']);
+        Route::get('admin_kelompok/konfirmasi/{id}/{periode}', [AdminKelompokController::class, 'konfirmasi']);
+        Route::get('admin_kelompok/batal_konfirmasi/{id}/{periode}', [AdminKelompokController::class, 'batal_konfirmasi']);
+        Route::get('admin_kelompok/detail/{id}/{periode}', [AdminKelompokController::class, 'detail']);
+        Route::get('admin_kelompok/get_data_laporan/{id}/{periode}', [AdminKelompokController::class, 'get_data_laporan']);
     });
     Route::middleware('guru')->group(function () {
 

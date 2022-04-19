@@ -27,39 +27,49 @@ class KelompokController extends Controller
     }
     public function get_data()
     {
-        $periode = DB::table('periode')->where('status','on')->pluck('id');
-        if($periode->count() > 0){
-            $kelompok = DB::table('kelompok')->where('id_periode',$periode)->select(DB::raw('id_perusahaan'))->groupBy('id_perusahaan')->pluck('id_perusahaan');
-            if($kelompok->count() > 0){
-                $data = DB::table('perusahaan')->whereIn('id', [$kelompok])->orderBy('id','desc')->get();
-            }else{
-                $data  = [];
-            }
-        }else{
-            $data = [];
-        }
+        $periode = DB::table('periode')->where('status','on')->orderBy('created_at')->pluck('id');
+
+        $data = DB::table('kelompok as k')
+        ->join('perusahaan as p','p.id','k.id_perusahaan')->join('periode as pe','pe.id','k.id_periode')
+        ->where('k.id_periode',$periode)
+        ->groupBy('k.id_perusahaan')
+        ->selectRaw('
+            k.id_perusahaan id,
+            k.id_periode,
+            pe.tglmulai,
+            k.konfirmasi,
+            p.nama,
+            p.email,
+            p.no_telp,
+            p.alamat,
+            p.recommended,
+            p.kuota,
+            count(*) pendaftar
+        ')->get();
 
         return Datatables::of($data)
             ->addIndexColumn()
             ->addColumn('action', function($row){
-                $periode = DB::table('periode')->where('status','on')->pluck('id');
-                $kelompok = DB::table('kelompok')->where('id_periode',$periode)->where('id_perusahaan',$row->id)->first();
+                $kelompok = DB::table('kelompok')->where('id_periode',$row->id_periode)->where('id_perusahaan',$row->id)->first();
+                $durasi = count_date(now_date(),$row->tglmulai);
                 if($kelompok->konfirmasi == "no"){
-                    $actionBtn =
-                    '<button type="button" class="edit btn btn-info btn-sm" id="btn_konfirmasi" data-id="'.$row->id.'" data-toggle="tooltip" data-placement="top" title="Konfirmasi Pendaftaran"><i class="fas fa-check"></i>'.
-                    '</button> <button type="button" class="delete btn btn-danger btn-sm" id="btn_hapus" data-id="'.$row->id.'" data-toggle="tooltip" data-placement="top" title="Hapus Kelompok"><i class="fas fa-trash-alt"></i></button>'.
-                    '<input type="hidden" id="id'.$row->id.'" value="'.$row->id.'">';
+                    if($durasi >= 0){
+                        $actionBtn = '<button type="button" class="edit btn btn-info btn-sm" id="btn_konfirmasi" data-id="'.$row->id.'" data-periode="'.$row->id_periode.'" data-toggle="tooltip" data-placement="top" title="Konfirmasi Pendaftaran"><i class="fas fa-check"></i></button>';
+                    }
+                    $actionBtn .= '<button type="button" class="delete btn btn-danger btn-sm" id="btn_hapus" data-id="'.$row->id.'" data-periode="'.$row->id_periode.'" data-toggle="tooltip" data-placement="top" title="Hapus Kelompok"><i class="fas fa-trash-alt"></i></button>';
+                    $actionBtn .= '<input type="hidden" id="id'.$row->id.'" value="'.$row->id.'">';
                 }else{
-                    $actionBtn =
-                    '<button type="button" class="edit btn btn-warning btn-sm" id="btn_batal_konfirmasi" data-id="'.$row->id.'" data-toggle="tooltip" data-placement="top" title="Batalkan Pendaftaran"><i class="fas fa-backward"></i>'.
-                    '</button> <button type="button" class="delete btn btn-danger btn-sm" id="btn_hapus" data-id="'.$row->id.'" data-toggle="tooltip" data-placement="top" title="Hapus Kelompok"><i class="fas fa-trash-alt"></i></button>'.
-                    '<input type="hidden" id="id'.$row->id.'" value="'.$row->id.'">';
+                    $actionBtn = '<button type="button" class="edit btn btn-info btn-sm" id="btn_detail" data-id="'.$row->id.'" data-periode="'.$row->id_periode.'" data-toggle="tooltip" data-placement="top" title="Detail Kelompok"><i class="far fa-clipboard"></i></button>';
+                    if($durasi >= 0){
+                        $actionBtn .= '<button type="button" class="edit btn btn-warning btn-sm" id="btn_batal_konfirmasi" data-id="'.$row->id.'" data-periode="'.$row->id_periode.'" data-toggle="tooltip" data-placement="top" title="Batalkan Pendaftaran"><i class="fas fa-backward"></i></button>';
+                    }
+                    $actionBtn .= '<button type="button" class="delete btn btn-danger btn-sm" id="btn_hapus" data-id="'.$row->id.'" data-periode="'.$row->id_periode.'" data-toggle="tooltip" data-placement="top" title="Hapus Kelompok"><i class="fas fa-trash-alt"></i></button>';
+                    $actionBtn .= '<input type="hidden" id="id'.$row->id.'" value="'.$row->id.'">';
                 }
                 return $actionBtn;
             })
             ->addColumn('pendaftar', function($row){
-                $periode = DB::table('periode')->where('status','on')->pluck('id');
-                $sisakuota = DB::table('kelompok')->where('id_periode',$periode)->where('id_perusahaan',$row->id)->count();
+                $sisakuota = $row->pendaftar;
 
                 return $sisakuota;
             })
@@ -68,58 +78,68 @@ class KelompokController extends Controller
     }
     public function get_data_cari($id)
     {
-        $periode = DB::table('periode')->where('id',$id)->pluck('id');
-        if($periode->count() > 0){
-            $kelompok = DB::table('kelompok')->where('id_periode',$periode)->select(DB::raw('id_perusahaan'))->groupBy('id_perusahaan')->pluck('id_perusahaan');
-            if($kelompok->count() > 0){
-                $data = DB::table('perusahaan')->whereIn('id', [$kelompok])->orderBy('id','desc')->get();
-            }else{
-                $data  = [];
-            }
-        }else{
-            $data = [];
-        }
+
+
+        $data = DB::table('kelompok as k')
+        ->join('perusahaan as p','p.id','k.id_perusahaan')
+        ->join('periode as pe','pe.id','k.id_periode')
+        ->where('k.id_periode',$id)
+        ->groupBy('k.id_perusahaan')
+        ->selectRaw('
+            k.id_perusahaan id,
+            k.id_periode,
+            pe.tglmulai,
+            k.konfirmasi,
+            p.nama,
+            p.email,
+            p.no_telp,
+            p.alamat,
+            p.recommended,
+            p.kuota,
+            count(*) pendaftar
+        ')->get();
 
         return Datatables::of($data)
             ->addIndexColumn()
             ->addColumn('action', function($row){
-                $periode = DB::table('periode')->where('status','on')->pluck('id');
-                $kelompok = DB::table('kelompok')->where('id_periode',$periode)->where('id_perusahaan',$row->id)->first();
+                // $periode = DB::table('periode')->where('status','on')->pluck('id');
+                $kelompok = DB::table('kelompok')->where('id_periode',$row->id_periode)->where('id_perusahaan',$row->id)->first();
+                $durasi = count_date(now_date(),$row->tglmulai);
                 if($kelompok->konfirmasi == "no"){
-                    $actionBtn =
-                    '<button type="button" class="edit btn btn-info btn-sm" id="btn_konfirmasi" data-id="'.$row->id.'" data-toggle="tooltip" data-placement="top" title="Konfirmasi Pendaftaran"><i class="fas fa-check"></i>'.
-                    '</button> <button type="button" class="delete btn btn-danger btn-sm" id="btn_hapus" data-id="'.$row->id.'" data-toggle="tooltip" data-placement="top" title="Hapus Kelompok"><i class="fas fa-trash-alt"></i></button>'.
-                    '<input type="hidden" id="id'.$row->id.'" value="'.$row->id.'">';
+                    if($durasi >= 0){
+                        $actionBtn = '<button type="button" class="edit btn btn-info btn-sm" id="btn_konfirmasi" data-id="'.$row->id.'" data-periode="'.$row->id_periode.'" data-toggle="tooltip" data-placement="top" title="Konfirmasi Pendaftaran"><i class="fas fa-check"></i></button>';
+                    }
+                    $actionBtn .= '<button type="button" class="delete btn btn-danger btn-sm" id="btn_hapus" data-id="'.$row->id.'" data-periode="'.$row->id_periode.'" data-toggle="tooltip" data-placement="top" title="Hapus Kelompok"><i class="fas fa-trash-alt"></i></button>';
+                    $actionBtn .= '<input type="hidden" id="id'.$row->id.'" value="'.$row->id.'">';
                 }else{
-                    $actionBtn =
-                    '<button type="button" class="edit btn btn-warning btn-sm" id="btn_batal_konfirmasi" data-id="'.$row->id.'" data-toggle="tooltip" data-placement="top" title="Batalkan Pendaftaran"><i class="fas fa-backward"></i>'.
-                    '</button> <button type="button" class="delete btn btn-danger btn-sm" id="btn_hapus" data-id="'.$row->id.'" data-toggle="tooltip" data-placement="top" title="Hapus Kelompok"><i class="fas fa-trash-alt"></i></button>'.
-                    '<input type="hidden" id="id'.$row->id.'" value="'.$row->id.'">';
+                    $actionBtn = '<button type="button" class="edit btn btn-info btn-sm" id="btn_detail" data-id="'.$row->id.'" data-periode="'.$row->id_periode.'" data-toggle="tooltip" data-placement="top" title="Detail Kelompok"><i class="far fa-clipboard"></i></button>';
+                    if($durasi >= 0){
+                        $actionBtn .= '<button type="button" class="edit btn btn-warning btn-sm" id="btn_batal_konfirmasi" data-id="'.$row->id.'" data-periode="'.$row->id_periode.'" data-toggle="tooltip" data-placement="top" title="Batalkan Pendaftaran"><i class="fas fa-backward"></i></button>';
+                    }
+                    $actionBtn .= '<button type="button" class="delete btn btn-danger btn-sm" id="btn_hapus" data-id="'.$row->id.'" data-periode="'.$row->id_periode.'" data-toggle="tooltip" data-placement="top" title="Hapus Kelompok"><i class="fas fa-trash-alt"></i></button>';
+                    $actionBtn .= '<input type="hidden" id="id'.$row->id.'" value="'.$row->id.'">';
                 }
                 return $actionBtn;
             })
             ->addColumn('pendaftar', function($row){
-                $periode = DB::table('periode')->where('status','on')->pluck('id');
-                $sisakuota = DB::table('kelompok')->where('id_periode',$periode)->where('id_perusahaan',$row->id)->count();
+                $sisakuota = $row->pendaftar;
 
                 return $sisakuota;
             })
             ->rawColumns(['action','status','pendaftar'])
             ->make(true);
     }
-    public function hapus($id){
-        DB::table('kelompok')->where('id_perusahaan',$id)->delete();
+    public function hapus($id,$periode){
+        DB::table('kelompok')->where([['id_perusahaan',$id],['id_periode',$periode]])->delete();
     }
-    public function konfirmasi($id){
-        $periode = DB::table('periode')->where('status','on')->pluck('id');
-        DB::table('kelompok')->where('id_periode', $periode)->where('id_perusahaan',$id)->update(["konfirmasi" => "yes"]);
+    public function konfirmasi($id,$periode){
+        DB::table('kelompok')->where('id_periode', $periode)->where([['id_perusahaan',$id],['id_periode',$periode]])->update(["konfirmasi" => "yes"]);
     }
-    public function batal_konfirmasi($id){
-        $periode = DB::table('periode')->where('status','on')->pluck('id');
-        DB::table('kelompok')->where('id_periode',$periode)->where('id_perusahaan',$id)->update(["konfirmasi" => "no"]);
+    public function batal_konfirmasi($id,$periode){
+        DB::table('kelompok')->where('id_periode',$periode)->where([['id_perusahaan',$id],['id_periode',$periode]])->update(["konfirmasi" => "no"]);
     }
-    public function get_data_kelompok($id){
-        $periode = DB::table('periode')->where('status','on')->pluck('id');
+    public function get_data_kelompok($id,$periode){
+        // $periode = DB::table('periode')->where('status','on')->pluck('id');
         $data = DB::table('kelompok as kel')->where('kel.id_periode',$periode)
             ->join('siswa as s','kel.id_user','s.id_user')
             ->join('users as u','kel.id_user','u.id')
@@ -142,5 +162,36 @@ class KelompokController extends Controller
         $data = DB::table('perusahaan')->where('id',$id)->first();
 
         return response()->json($data);
+    }
+    public function detail($id,$periode){
+
+        $data['judul'] = "Detail Kelompok";
+        $data['periode'] = $periode;
+        $data['id'] = $id;
+        $data['perusahaan'] = DB::table('perusahaan')->where('id',$id)->first();
+
+        return view('admin.kelompok-detail',$data);
+    }
+    public function get_data_laporan($id,$periode){
+        $data = DB::table('laporan_kegiatan as l')
+        ->selectRaw('
+        l.id,
+        l.id_kelompok,
+        l.anggota,
+        l.tanggal,
+        l.kegiatan,
+        l.detail_kegiatan
+        ')
+        ->join('kelompok as k','k.id_kelompok','l.id_kelompok')
+        ->where('k.id_periode',$periode)->where('k.id_perusahaan',$id)
+        ->orderBy('l.id')->get();
+
+        return DataTables::of($data)
+            ->addIndexColumn()
+            ->addColumn('tanggal', function($row){
+                return blade_date($row->tanggal,'d/m/Y');
+            })
+            ->rawColumns(['tanggal'])
+            ->make(true);
     }
 }

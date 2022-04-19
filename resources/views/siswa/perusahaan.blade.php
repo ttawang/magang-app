@@ -3,7 +3,7 @@
 @section('content')
 
 
-<div class="content-header" style="padding-bottom: 3px;">
+{{-- <div class="content-header" style="padding-bottom: 3px;">
     <div class="container-fluid">
         <div class="card card-default">
             <div class="card-body">
@@ -85,6 +85,67 @@
             </div>
         </div>
     </div>
+</div> --}}
+<div class="content-header" style="padding-bottom: 3px;">
+    <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="callout callout-info">
+
+                <div class="row">
+                    <div class="col"><p><b> Nama Perusahaan </b></p></div>
+                    <div class="col-auto"><b>:</b></div>
+                    <div class="col"><p>{{ $perusahaan->nama }}</p></div>
+                    <div class="col-auto">
+                        <h5></h5>
+                    </div>
+                    <div class="col"><p><b> Email Perusahaan </b></p></div>
+                    <div class="col-auto"><b>:</b></div>
+                    <div class="col"><p> {{ $perusahaan->email }}</p></div>
+                </div>
+                <div class="row">
+                    <div class="col"><p><b> Alamat </b></p></div>
+                    <div class="col-auto"><b>:</b></div>
+                    <div class="col"><p>{{ $perusahaan->alamat }}</p></div>
+                    <div class="col-auto">
+                        <h5></h5>
+                    </div>
+                    <div class="col"><p><b> No. Telp </b></p></div>
+                    <div class="col-auto"><b>:</b></div>
+                    <div class="col"><p>{{ $perusahaan->no_telp }}</p></div>
+                </div>
+                <div class="row">
+                    <div class="col"><p><b> Kuota </b></p></div>
+                    <div class="col-auto"><b>:</b></div>
+                    <div class="col"><p>{{ $perusahaan->kuota }} ( {{ terbilang($perusahaan->kuota) }} )</p></div>
+                    <div class="col-auto">
+                        <h5></h5>
+                    </div>
+                    <div class="col"><p><b> Sisa Kuota </b></p></div>
+                    <div class="col-auto"><b>:</b></div>
+                    <div class="col"><p>{{ $sisakuota }} ( {{ terbilang($sisakuota) }} )</p></div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col"><p><b> Status </b></p></div>
+                    <div class="col-auto"><b>:</b></div>
+                    @if ($perusahaan->konfirmasi == "yes")
+                        <div class="col"><p class="badge bg-success">Telah di Konfirmasi</p></div>
+                    @else
+                        <div class="col"><p class="badge bg-danger">Menunggu Konfirmasi</p></div>
+                    @endif
+
+                    <div class="col-auto">
+                        <h5></h5>
+                    </div>
+                    <div class="col"><p><b></b></p></div>
+                    <div class="col-auto"><b></b></div>
+                    <div class="col"><p></p></div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
 </div>
 <div class="content">
     <div class="container-fluid">
@@ -93,7 +154,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">
-                            <i class="mr-1 text-secondary"><b>Kelompok</b></i>
+                            <h5><b>Kelompok</b></h5>
                         </div>
                     </div>
                     <div class="card-body">
@@ -163,11 +224,11 @@
             processing: true,
             serverSide: true,
             "paging": false,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": false,
-            "info": false,
-            "autoWidth": false,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": true,
             "responsive": true,
             ajax: "{{ url('siswa_perusahaan/daftarkelompok') }}",
             columns: [

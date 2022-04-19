@@ -69,6 +69,16 @@
               </li>
             </ul>
           </li>
+          <li class="nav-item menu-open">
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                <!--a href="./index.html" class="nav-link active"-->
+                <a href="{{url('admin_laporan')}}" class="nav-link">
+                    <i class="nav-icon far fa-clipboard mr-2"></i><p>&ensp;Laporan</p>
+                </a>
+                </li>
+            </ul>
+        </li>
 
         @elseif (Auth::user()->role == "siswa")
         <li class="nav-item menu-open">
