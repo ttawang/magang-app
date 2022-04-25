@@ -73,8 +73,8 @@
             <ul class="nav nav-treeview">
                 <li class="nav-item">
                 <!--a href="./index.html" class="nav-link active"-->
-                <a href="{{url('admin_laporan')}}" class="nav-link">
-                    <i class="nav-icon far fa-clipboard mr-2"></i><p>&ensp;Laporan</p>
+                <a href="{{url('admin_penilaian')}}" class="nav-link">
+                    <i class="nav-icon far fa-clipboard mr-2"></i><p>&ensp;Penilaian</p>
                 </a>
                 </li>
             </ul>

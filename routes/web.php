@@ -5,6 +5,7 @@ use App\Http\Controllers\admin\SiswaController as AdminSiswaController;
 use App\Http\Controllers\admin\KelasController as AdminKelasController;
 use App\Http\Controllers\admin\PerusahaanController as AdminPerusahaanController;
 use App\Http\Controllers\admin\KelompokController as AdminKelompokController;
+use App\Http\Controllers\admin\PenilaianController as AdminPenilaianController;
 
 
 
@@ -83,6 +84,14 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('admin_kelompok/batal_konfirmasi/{id}/{periode}', [AdminKelompokController::class, 'batal_konfirmasi']);
         Route::get('admin_kelompok/detail/{id}/{periode}', [AdminKelompokController::class, 'detail']);
         Route::get('admin_kelompok/get_data_laporan/{id}/{periode}', [AdminKelompokController::class, 'get_data_laporan']);
+        Route::get('admin_kelompok/hapus_siswa/{id}', [AdminKelompokController::class, 'hapus_siswa']);
+
+        Route::get('admin_penilaian', [AdminPenilaianController::class, 'index']);
+        Route::get('admin_penilaian/get_data/{id}', [AdminPenilaianController::class, 'get_data']);
+        Route::post('admin_penilaian/simpan', [AdminPenilaianController::class, 'simpan']);
+        Route::get('admin_penilaian/get_kelompok/{id}/{periode}', [AdminPenilaianController::class, 'get_kelompok']);
+        Route::get('admin_penilaian/get_perusahaan/{id}', [AdminPenilaianController::class, 'get_perusahaan']);
+        Route::get('admin_penilaian/cari/{id}', [AdminPenilaianController::class, 'cari']);
     });
     Route::middleware('guru')->group(function () {
 

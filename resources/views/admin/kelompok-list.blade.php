@@ -9,11 +9,16 @@
 
               {{-- <h5> Periode : {{ $periode->nama_periode }}</h5>
                 <h5>{{ text_date($periode->tglmulai) ." - ".text_date($periode->tglselesai) }}</h5><br> --}}
-
                 <div class="row">
-                    <div class="col"><h5><b>Nama Periode </b></h5></div>
-                    <div class="col-auto"><b>:</b></div>
-                    <div class="col"><h5>{{ $periode->nama_periode }}</h5></div>
+                    @if ((count_date(now_date(),$periode->tglmulai) <= 0) && (count_date(now_date(),$periode->tglselesai) >= 0))
+                    <div class="col"><h5 class="text-success"><b>Periode Sedang Berlangsung</b></h5></div>
+                    @elseif (count_date(now_date(),$periode->tglmulai) >= 0)
+                    <div class="col"><h5 class="text-warning"><b>Periode Akan Berlangsung</b></h5></div>
+                    @else
+                    <div class="col"><h5 class="text-danger"><b>Periode Telah Selesai</b></h5></div>
+                    @endif
+                    <div class="col-auto"><b></b></div>
+                    <div class="col"><h5></h5></div>
                     <div class="col-auto">
                         <h5></h5>
                     </div>
@@ -21,23 +26,35 @@
                     <div class="col-auto"><b></b></div>
                     <div class="col"><p></p></div>
                 </div>
+                <br>
                 <div class="row">
-                    <div class="col"><h5><b>Tanggal Mulai </b></h5></div>
+                    <div class="col"><p><b>Nama Periode </b></p></div>
                     <div class="col-auto"><b>:</b></div>
-                    <div class="col"><h5>{{ text_date($periode->tglmulai) }}</h5></div>
+                    <div class="col"><p>{{ $periode->nama_periode }}</p></div>
                     <div class="col-auto">
-                        <h5></h5>
+                        <p></p>
                     </div>
-                    <div class="col"><p><b></b></p></div>
-                    <div class="col-auto"><b></b></div>
-                    <div class="col"><p></p></div>
+                    <div class="col"><p><b>Jumlah Kelompok</b></p></div>
+                    <div class="col-auto"><b>:</b></div>
+                    <div class="col"><p>{{ $jumlahkelompok }} Kelompok</p></div>
                 </div>
                 <div class="row">
-                    <div class="col"><h5><b>Tanggal Selesai </b></h5></div>
+                    <div class="col"><p><b>Tanggal Mulai </b></p></div>
                     <div class="col-auto"><b>:</b></div>
-                    <div class="col"><h5>{{ text_date($periode->tglselesai) }}</h5></div>
+                    <div class="col"><p>{{ text_date($periode->tglmulai) }}</p></div>
                     <div class="col-auto">
-                        <h5></h5>
+                        <p></p>
+                    </div>
+                    <div class="col"><p><b>Jumlah Siswa</b></p></div>
+                    <div class="col-auto"><b>:</b></div>
+                    <div class="col"><p>{{ $jumlahsiswa }} Siswa</p></div>
+                </div>
+                <div class="row">
+                    <div class="col"><p><b>Tanggal Selesai </b></p></div>
+                    <div class="col-auto"><b>:</b></div>
+                    <div class="col"><p>{{ text_date($periode->tglselesai) }}</p></div>
+                    <div class="col-auto">
+                        <p></p>
                     </div>
                     <div class="col"><p><b></b></p></div>
                     <div class="col-auto"><b></b></div>
@@ -173,6 +190,7 @@
                                 <th >Nama</th>
                                 <th>Email</th>
                                 <th>Kelas</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -245,7 +263,36 @@ $(document).ready(function () {
                 {data: 'nama', name: 'nama'},
                 {data: 'email', name: 'email'},
                 {data: 'nama_kelas', name: 'nama_kelas'},
+                {data: 'action', name: 'action', orderable: true, searchable: true},
             ],
+            columnDefs: [
+                { className: 'text-right', targets: [] },
+                { className: 'text-center', targets: [0,4] },
+            ],
+        });
+        $('body').on('click', '#btn_hapus_siswa', function () {
+            Swal.fire({
+            title: 'Data siswa akan dihapus !',
+            text: "Data yang telah dihapus tidak dapat dikembalikan",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Hapus'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var id = $(this).data('id');
+                    var periode = $(this).data('periode');
+                    $.get("{{ url('admin_kelompok/hapus_siswa') }}"+'/'+id);
+                    Swal.fire({
+                        title: 'Deleted!',
+                        text: 'Data telah dihapus.',
+                        type: "success"
+                    }).then((result) => {
+                        tb2.ajax.reload();
+                    })
+                }
+            })
         });
     }
     $("#modal_data").on("hidden.bs.modal", function(){
@@ -360,6 +407,7 @@ $('body').on('click', '#btn_detail', function () {
     // window.location.href = "/admin_kelompok/detail"+"/"+id+"/"+periode;
     window.open("/admin_kelompok/detail"+"/"+id+"/"+periode, '_blank');
 });
+
 
 </script>
 

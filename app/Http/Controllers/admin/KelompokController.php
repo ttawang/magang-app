@@ -14,7 +14,8 @@ class KelompokController extends Controller
         $data['judul'] = 'Kelompok';
         $data['periode'] = DB::table('periode')->where('status','on')->first();
         $data['list_periode'] = DB::table('periode')->where('status','!=','on')->orderBy('id','desc')->get();
-
+        $data['jumlahkelompok'] = DB::table('kelompok')->where('id_periode',$data['periode']->id)->groupBy('id_perusahaan')->get()->count();
+        $data['jumlahsiswa'] = DB::table('kelompok')->where('id_periode',$data['periode']->id)->count();
 
         return view('admin.kelompok-list',$data);
     }
@@ -22,6 +23,8 @@ class KelompokController extends Controller
         $data['judul'] = 'Cari Kelompok';
         $data['periode'] = DB::table('periode')->where('id',$id)->first();
         $data['list_periode'] = DB::table('periode')->where('status','!=','on')->where('id','!=',$id)->orderBy('id','desc')->get();
+        $data['jumlahkelompok'] = DB::table('kelompok')->where('id_periode',$data['periode']->id)->groupBy('id_perusahaan')->get()->count();
+        $data['jumlahsiswa'] = DB::table('kelompok')->where('id_periode',$data['periode']->id)->count();
 
         return view('admin.kelompok-list-cari',$data);
     }
@@ -143,20 +146,41 @@ class KelompokController extends Controller
         $data = DB::table('kelompok as kel')->where('kel.id_periode',$periode)
             ->join('siswa as s','kel.id_user','s.id_user')
             ->join('users as u','kel.id_user','u.id')
+            ->join('periode as p','p.id','kel.id_periode')
             ->leftjoin('kelas as k','s.id_kelas','k.id')
             ->select(DB::raw('
-                s.*,kel.*,
+                kel.id_kelompok,
+                p.id as id_periode,
+                p.tglmulai,
+                p.tglselesai,
                 u.name nama,
                 u.email email,
                 k.nama nama_kelas
             '))
-            ->where('id_perusahaan',$id)
+            ->where('kel.id_perusahaan',$id)
             ->orderBy('nama','asc')
             ->get();
+            // dd($data);
 
         return Datatables::of($data)
             ->addIndexColumn()
+            ->addColumn('action', function($row){
+                if((count_date(now_date(),$row->tglmulai) <= 0) && (count_date(now_date(),$row->tglselesai) >= 0)){
+                    $btn = '<button type="button" class="delete btn btn-danger btn-sm" id="btn_hapus_siswa" data-id="'.$row->id_kelompok.'" data-toggle="tooltip" data-placement="top" title="Hapus Siswa"><i class="fas fa-trash-alt"></i></button>';
+                }elseif(count_date(now_date(),$row->tglmulai) >= 0){
+                    $btn = '<button type="button" class="delete btn btn-danger btn-sm" id="btn_hapus_siswa" data-id="'.$row->id_kelompok.'" data-toggle="tooltip" data-placement="top" title="Hapus Siswa"><i class="fas fa-trash-alt"></i></button>';
+                }else{
+                    $btn = '<button type="button" class="delete btn btn-danger btn-sm" id="btn_hapus_siswa" data-id="'.$row->id_kelompok.'" data-toggle="tooltip" data-placement="top" title="Hapus Siswa" disabled><i class="fas fa-trash-alt"></i></button>';
+                }
+
+                return $btn;
+            })
+            ->rawColumns(['action'])
             ->make(true);
+    }
+    public function hapus_siswa($id)
+    {
+        DB::table('kelompok')->where('id_kelompok',$id)->delete();
     }
     public function show($id){
         $data = DB::table('perusahaan')->where('id',$id)->first();

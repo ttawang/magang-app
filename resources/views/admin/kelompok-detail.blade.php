@@ -42,6 +42,7 @@
                             <th >Nama</th>
                             <th>Email</th>
                             <th>Kelas</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -104,6 +105,11 @@
                 {data: 'nama', name: 'nama'},
                 {data: 'email', name: 'email'},
                 {data: 'nama_kelas', name: 'nama_kelas'},
+                {data: 'action', name: 'action', orderable: true, searchable: true},
+            ],
+            columnDefs: [
+                { className: 'text-right', targets: [] },
+                { className: 'text-center', targets: [0,4] },
             ],
         });
         tb2 = $('#tabel_laporan').DataTable({
@@ -134,6 +140,30 @@
 
     $('body').on('click', '#btn_kembali', function () {
         window.location.href = "/admin_kelompok";
+    });
+    $('body').on('click', '#btn_hapus_siswa', function () {
+        Swal.fire({
+        title: 'Data siswa akan dihapus !',
+        text: "Data yang telah dihapus tidak dapat dikembalikan",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Hapus'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var id = $(this).data('id');
+                var periode = $(this).data('periode');
+                $.get("{{ url('admin_kelompok/hapus_siswa') }}"+'/'+id);
+                Swal.fire({
+                    title: 'Deleted!',
+                    text: 'Data telah dihapus.',
+                    type: "success"
+                }).then((result) => {
+                    tb.ajax.reload();
+                })
+            }
+        })
     });
 
 </script>
