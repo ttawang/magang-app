@@ -93,6 +93,59 @@
             <div class="callout callout-info">
 
                 <div class="row">
+                    @if ((count_date(now_date(),$periode->tglmulai) <= 0) && (count_date(now_date(),$periode->tglselesai) >= 0))
+                    <div class="col"><h5 class="text-success"><b>Periode Sedang Berlangsung</b></h5></div>
+                    @elseif (count_date(now_date(),$periode->tglmulai) >= 0)
+                    <div class="col"><h5 class="text-warning"><b>Periode Akan Berlangsung</b></h5></div>
+                    @else
+                    <div class="col"><h5 class="text-danger"><b>Periode Telah Selesai</b></h5></div>
+                    @endif
+                    <div class="col-auto"><b></b></div>
+                    <div class="col"><h5></h5></div>
+                    <div class="col-auto">
+                        <h5></h5>
+                    </div>
+                    <div class="col"><p><b></b></p></div>
+                    <div class="col-auto"><b></b></div>
+                    <div class="col"><p></p></div>
+                </div>
+                <div class="row">
+                    <div class="col"><p><b>Nama Periode </b></p></div>
+                    <div class="col-auto"><b>:</b></div>
+                    <div class="col"><p>{{ $periode->nama_periode }}</p></div>
+                    <div class="col-auto">
+                        <p></p>
+                    </div>
+                    <div class="col"><p><b></b></p></div>
+                    <div class="col-auto"><b></b></div>
+                    <div class="col"><p></p></div>
+                </div>
+                <div class="row">
+                    <div class="col"><p><b>Tanggal Mulai </b></p></div>
+                    <div class="col-auto"><b>:</b></div>
+                    <div class="col"><p>{{ text_date($periode->tglmulai) }}</p></div>
+                    <div class="col-auto">
+                        <p></p>
+                    </div>
+                    <div class="col"><p><b></b></p></div>
+                    <div class="col-auto"><b></b></div>
+                    <div class="col"><p></p></div>
+                </div>
+                <div class="row">
+                    <div class="col"><p><b>Tanggal Selesai </b></p></div>
+                    <div class="col-auto"><b>:</b></div>
+                    <div class="col"><p>{{ text_date($periode->tglselesai) }}</p></div>
+                    <div class="col-auto">
+                        <p></p>
+                    </div>
+                    <div class="col"><p><b></b></p></div>
+                    <div class="col-auto"><b></b></div>
+                    <div class="col"><p></p></div>
+                </div>
+
+                <hr>
+
+                <div class="row">
                     <div class="col"><p><b> Nama Perusahaan </b></p></div>
                     <div class="col-auto"><b>:</b></div>
                     <div class="col"><p>{{ $perusahaan->nama }}</p></div>

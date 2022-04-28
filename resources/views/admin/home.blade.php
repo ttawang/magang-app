@@ -12,22 +12,79 @@
           <div class="col-12">
             <div class="callout callout-info">
               <h5><i class="fas fa-info"></i> Perhatian:</h5>
-              @if ($cek < 1)
-                Periode belum ditambahkan. Harap tambahkan periode terlebih dahulu. <br>
-                <button type="button" class="btn btn-sm btn-info" id="btn_tambah_periode" style="margin-right: 5px;"><i class="far fa-calendar-plus"></i> Tambah Periode</button>
+              @if (!$periode)
+                @if (Auth::user()->role == 'admin')
+                    Periode belum ditambahkan. Harap tambahkan periode terlebih dahulu. <br>
+                    <button type="button" class="btn btn-sm btn-info" id="btn_tambah_periode" style="margin-right: 5px;"><i class="far fa-calendar-plus"></i> Tambah Periode</button>
+                @else
+                    Periode belum ditambahkan.
+                @endif
               @else
                 Harap laksanakan prakerin sesuai tanggal yang telah ditentukan.
               @endif
             </div>
 
-            @if ($cek > 0)
+            @if ($periode)
+                @if ($detail)
+                <div class="invoice p-3 mb-3" id="periode">
+                    <div class="row">
+
+                    </div>
+                    <div class="row invoice-info">
+                        <div class="col-sm-8 invoice-col">
+                            <address>
+                                <h1><b>Selamat Datang </b></h1><br>
+                                <h1>{{ $detail->nama_siswa }}</h1>
+                                <h5 class="text-success "><b>Anda telah mendaftar prakerin pada {{ $detail->nama_periode }}</b></h5>
+                                <div class="row">
+                                    <div class="col"><b> Nama Perusahaan </b></div>
+                                    <div class="col-auto"><b>:</b></div>
+                                    <div class="col">{{ $detail->nama_perusahaan }}</div>
+
+                                    <div class="col"><p><b></b></p></div>
+                                    <div class="col-auto"><b></b></div>
+                                    <div class="col"><p> </p></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col"><b> Email Perusahaan </b></div>
+                                    <div class="col-auto"><b>:</b></div>
+                                    <div class="col">{{ $detail->email }}</div>
+
+                                    <div class="col"><p><b></b></p></div>
+                                    <div class="col-auto"><b></b></div>
+                                    <div class="col"><p></p></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col"><b> No.Telp Perusahaan </b></div>
+                                    <div class="col-auto"><b>:</b></div>
+                                    <div class="col">{{ $detail->no_telp }}</div>
+
+                                    <div class="col"><p><b></b></p></div>
+                                    <div class="col-auto"><b></b></div>
+                                    <div class="col"><p></p></div>
+                                </div>
+                            </address>
+                        </div>
+
+                      <div class="col-sm-4 invoice-col">
+                        <address>
+                            <br><br>
+                            <strong>Tanggal Dimulai:</strong><br>
+                            <h1>{{ text_date($detail->tglmulai) }}</h1><br>
+                            <strong>Tanggal Berakhir:</strong><br>
+                            <h1>{{ text_date($detail->tglselesai) }}</h1><br>
+                        </address>
+                      </div>
+                    </div>
+                  </div>
+                @endif
             <!-- Main content -->
             <div class="invoice p-3 mb-3" id="periode">
               <!-- title row -->
               <div class="row">
                 <div class="col-12">
                   <h4>
-                    <i class="far fa-calendar-alt"></i> Periode Prakerin
+                    <i class="far fa-calendar-alt"></i> Periode Prakerin Berlangsung
                     <input type="hidden" name="id" value="{{ ($periode != null) ? $periode->id : '' }}">
                     {{-- <small class="float-right">Date: 2/10/2014</small> --}}
                   </h4>

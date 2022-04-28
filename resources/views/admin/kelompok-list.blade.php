@@ -289,7 +289,9 @@ $(document).ready(function () {
                         text: 'Data telah dihapus.',
                         type: "success"
                     }).then((result) => {
+                        $("#modal_data").modal("hide");
                         tb2.ajax.reload();
+                        tb.ajax.reload();
                     })
                 }
             })

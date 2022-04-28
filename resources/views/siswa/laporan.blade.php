@@ -6,25 +6,32 @@
         <div class="row">
           <div class="col-12">
             <div class="callout callout-info">
-            @if(count($kelompok) >0 && $kelompok[0]->konfirmasi == 'yes')
-              <h5><i class="fas fa-info"></i> Perhatian:</h5>
-                Masukkan setiap kegiatan individu maupun kelompok. <br><br>
+            @if(($kelompok) && $kelompok[0]->konfirmasi == 'yes')
+                @if (count_date(now_date(),$periode->tglselesai) > 0)
+                <h5><i class="fas fa-info"></i> Perhatian:</h5>
+                Periode sedang berlangsung, masukkan setiap kegiatan individu maupun kelompok. <br><br>
                 <button type="button" class="btn btn-sm btn-info" id="btn_tambah_laporan" style="margin-right: 5px;"><i class="fas fa-plus-circle"></i></i> Tambah Laporan</button>
+                @else
+                <h5><i class="fas fa-info"></i> Perhatian:</h5>
+                Periode telah selesai, anda tidak dapat menambahkan kegiatan individu maupun kelompok. <br><br>
+                <button type="button" class="btn btn-sm btn-info" id="btn_tambah_laporan" style="margin-right: 5px;" disabled><i class="fas fa-plus-circle"></i></i> Tambah Laporan</button>
+                @endif
                 <a href="{{ url('siswa_laporan/cetak') }}" target="_blank"><button type="button" class="btn btn-sm btn-warning" id="btn_cetak_laporan" style="margin-right: 5px;"><i class="fas fa-print"></i></i> Cetak laporan</button></a>
-            @elseif(count($kelompok) >0 && $kelompok[0]->konfirmasi == 'no')
+            @elseif(($kelompok) && $kelompok[0]->konfirmasi == 'no')
                 <h5><i class="fas fa-info"></i> Perhatian:</h5>
                 Pendaftaran prakerin anda belum dikonfirmasi. <br><br>
             @else
                 <h5><i class="fas fa-info"></i> Perhatian:</h5>
                 Anda belum terdaftar dalam perusahaan prakerin. <br><br>
-                <a href="{{ url('siswa_perusahaan') }}"><button type="button" class="btn btn-sm btn-info" style="margin-right: 5px;"><i class="nav-icon fas fa-building mr-2"></i> Daftar Prakerin</button></a>
+                <a href="{{ url('siswa_perusahaan') }}"><button type="button" class="btn btn-sm btn-info" style="margin-right: 5px;"><i class="fas fa-building"></i> Daftar Prakerin</button></a>
             @endif
             </div>
           </div>
         </div>
       </div>
 </div>
-@if(count($kelompok) >0  && $kelompok[0]->konfirmasi == 'yes' )
+{{-- @if(count($kelompok) >0  && $kelompok[0]->konfirmasi == 'yes' ) --}}
+@if($kelompok)
 <div class="content">
     <div class="container-fluid">
         <div class="row">

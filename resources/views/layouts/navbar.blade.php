@@ -23,9 +23,9 @@
         <i class="fas fa-user"></i>
       </a>
       <div class="dropdown-menu  dropdown-menu-right" >
-        <a href="{{url('#')}}" class="dropdown-item">
+        {{-- <a href="{{url('#')}}" class="dropdown-item">
           <i class="fas fa-pen mr-2"></i>&ensp;Edit Profile
-        </a>
+        </a> --}}
         <a href="{{url('logout')}}" class="dropdown-item">
             <i class="fas fa-arrow-left mr-2"></i>&ensp;Log Out
           </a>

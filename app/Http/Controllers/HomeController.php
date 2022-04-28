@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
@@ -12,8 +13,27 @@ class HomeController extends Controller
     public function index()
     {
         $data['judul'] = "Home";
-        $data['cek'] = DB::table('periode')->where('status','on')->count();
+        // $data['cek'] = DB::table('periode')->where('status','on')->count();
         $data['periode'] = DB::table('periode')->where('status','on')->first();
+
+        // $akun = DB::table('kelompok as k')->where('id_user', Auth::user()->id)->first();
+        // if($akun){
+        $data['detail'] = DB::table('kelompok as k')
+            ->join('periode as p','p.id','k.id_periode')
+            ->join('users as u','u.id','k.id_user')
+            ->join('perusahaan as pe','pe.id','k.id_perusahaan')
+            ->selectRaw('
+            u.name as nama_siswa,
+            p.nama_periode,
+            pe.nama nama_perusahaan,
+            pe.email,
+            pe.no_telp,
+            p.tglmulai,
+            p.tglselesai
+            ')
+            ->where('k.id_user',Auth::user()->id)->first();
+
+        // }
 
         return view('admin.home',$data);
     }
@@ -75,7 +95,6 @@ class HomeController extends Controller
             array_push($data, $temp);
         }
         $data = collect($data);
-        $result = DB::table('stocks')->orderBy('stockYear','asc')->get();
         return response()->json($data);
     }
     public function chartperusahaan()

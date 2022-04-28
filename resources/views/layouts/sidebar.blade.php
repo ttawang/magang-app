@@ -105,8 +105,8 @@
             <ul class="nav nav-treeview">
                 <li class="nav-item">
                 <!--a href="./index.html" class="nav-link active"-->
-                <a href="{{url('siswa_laporan')}}" class="nav-link">
-                    <i class="nav-icon fa-solid fa-file-contract mr2"></i><p>&ensp;Sertifikat</p>
+                <a href="{{url('siswa_sertifikat')}}" class="nav-link">
+                    <i class="nav-icon fa-solid fa-file-contract mr2"></i><p>&ensp; Sertifikat</p>
                     {{-- <i class="fa-solid fa-file-contract"></i> --}}
                 </a>
                 </li>

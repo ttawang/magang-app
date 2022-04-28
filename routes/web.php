@@ -16,6 +16,8 @@ use App\Http\Controllers\AuthController;
 
 use App\Http\Controllers\siswa\SiswaPerusahaanController;
 use App\Http\Controllers\siswa\SiswaLaporanController;
+use App\Http\Controllers\siswa\SiswaSertifikatController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -108,6 +110,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('siswa_laporan/simpan',[SiswaLaporanController::class,'simpan']);
         Route::get('siswa_laporan/edit/{id}',[SiswaLaporanController::class,'edit']);
         Route::get('siswa_laporan/cetak',[SiswaLaporanController::class,'cetak']);
+
+        Route::get('siswa_sertifikat',[SiswaSertifikatController::class,'index']);
+        Route::get('siswa_sertifikat/cetak',[SiswaSertifikatController::class,'cetak']);
     });
 
 });
