@@ -1,46 +1,58 @@
 <?php
 
-namespace Tests\Feature\Controller\siswa;
+namespace Tests\Feature\Controller;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class SiswaPerusahaanControllerTest extends TestCase
+class HomeControllerTest extends TestCase
 {
     /**
      * A basic feature test example.
      *
      * @return void
      */
-    public function test_index()
+    /* public function test_index()
+    {
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+    } */
+    /* public function test_simpan()
+    {
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+    } */
+    /* public function test_akhiri()
+    {
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+    } */
+    /* public function test_edit()
+    {
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+    } */
+    public function test_chartperiode()
     {
         $response = $this->get('/');
 
         $response->assertStatus(200);
     }
-    public function test_get_data()
+    /* public function test_chartperusahaan()
     {
         $response = $this->get('/');
 
         $response->assertStatus(200);
-    }
-    public function test_daftarkelompok()
+    } */
+    /* public function test_periode()
     {
         $response = $this->get('/');
 
         $response->assertStatus(200);
-    }
-    public function test_daftar()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-    public function test_keluar()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
+    } */
 }

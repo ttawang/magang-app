@@ -9,6 +9,9 @@
 
               {{-- <h5> Periode : {{ $periode->nama_periode }}</h5>
                 <h5>{{ text_date($periode->tglmulai) ." - ".text_date($periode->tglselesai) }}</h5><br> --}}
+                @if ($periode)
+
+
                 <div class="row">
                     @if ((count_date(now_date(),$periode->tglmulai) <= 0) && (count_date(now_date(),$periode->tglselesai) >= 0))
                     <div class="col"><h5 class="text-success"><b>Periode Sedang Berlangsung</b></h5></div>
@@ -62,12 +65,15 @@
                 </div>
                 <br>
                 <button type="button" class="btn btn-sm btn-info" id="btn_cari" style="margin-right: 5px;"><i class="fas fa-search"></i> Cari Periode</button>
-
+                @else
+                Data Kosong
+                @endif
             </div>
           </div>
         </div>
       </div>
 </div>
+
 <div class="content">
     <div class="container-fluid">
         <div class="row">

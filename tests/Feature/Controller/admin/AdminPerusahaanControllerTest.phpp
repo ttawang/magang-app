@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\Feature\Controller;
+namespace Tests\Feature\Controller\admin;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class HomeControllerTest extends TestCase
+class AdminPerusahaanControllerTest extends TestCase
 {
     /**
      * A basic feature test example.
@@ -19,7 +19,7 @@ class HomeControllerTest extends TestCase
 
         $response->assertStatus(200);
     }
-    public function test_edit()
+    public function test_get_data()
     {
         $response = $this->get('/');
 
@@ -31,22 +31,22 @@ class HomeControllerTest extends TestCase
 
         $response->assertStatus(200);
     }
-    public function test_akhiri()
+    public function test_edit()
     {
         $response = $this->get('/');
 
         $response->assertStatus(200);
     }
-    public function test_chartperiode()
+    public function test_hapus()
     {
         $response = $this->get('/');
 
         $response->assertStatus(200);
     }
-    public function test_chartperusahaan()
+    /* public function test_rekomendasikanperusahaan()
     {
         $response = $this->get('/');
 
         $response->assertStatus(200);
-    }
+    } */
 }

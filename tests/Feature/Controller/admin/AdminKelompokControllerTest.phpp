@@ -13,7 +13,7 @@ class AdminKelompokControllerTest extends TestCase
      *
      * @return void
      */
-    public function test_index()
+    /* public function test_index()
     {
         $response = $this->get('/');
 
@@ -42,8 +42,9 @@ class AdminKelompokControllerTest extends TestCase
         $response = $this->get('/');
 
         $response->assertStatus(200);
-    }
-    public function test_konfirmasi()
+    } */
+
+    /* public function test_konfirmasi()
     {
         $response = $this->get('/');
 
@@ -54,14 +55,32 @@ class AdminKelompokControllerTest extends TestCase
         $response = $this->get('/');
 
         $response->assertStatus(200);
-    }
-    public function test_get_data_kelompok()
+    } */
+    /* public function test_get_data_kelompok()
     {
         $response = $this->get('/');
 
         $response->assertStatus(200);
     }
+    public function test_hapus_siswa()
+    {
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+    } */
     public function test_show()
+    {
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+    }
+    public function test_detail()
+    {
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+    }
+    public function test_get_data_laporan()
     {
         $response = $this->get('/');
 

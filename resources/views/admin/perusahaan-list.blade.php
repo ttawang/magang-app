@@ -25,7 +25,7 @@
                                     <th >No Telp</th>
                                     <th >Alamat</th>
                                     <th>Kuota</th>
-                                    <th >Sisa Kuota</th>
+                                    {{-- <th >Sisa Kuota</th> --}}
                                     <th >Status</th>
                                     <th >Aksi</th>
                                 </tr>
@@ -127,7 +127,7 @@ $(document).ready(function () {
             {data: 'no_telp', name: 'no_telp'},
             {data: 'alamat', name: 'alamat'},
             {data: 'kuota', name: 'kuota'},
-            {data: 'sisakuota', name: 'sisakuota'},
+            // {data: 'sisakuota', name: 'sisakuota'},
             {data: 'status', name: 'sttaus'},
             {data: 'action', name: 'action', orderable: true, searchable: true
             },

@@ -15,8 +15,14 @@ class PenilaianController extends Controller
         $data['judul'] = 'Penilaian';
         $data['periode'] = DB::table('periode')->where('status','on')->first();
         $data['list_periode'] = DB::table('periode')->where('status','!=','on')->orderBy('id','desc')->get();
-        $data['jumlahkelompok'] = DB::table('kelompok')->where('id_periode',$data['periode']->id)->groupBy('id_perusahaan')->get()->count();
-        $data['jumlahsiswa'] = DB::table('kelompok')->where('id_periode',$data['periode']->id)->count();
+        if($data['periode']){
+            $data['jumlahkelompok'] = DB::table('kelompok')->where('id_periode',$data['periode']->id)->groupBy('id_perusahaan')->get()->count();
+            $data['jumlahsiswa'] = DB::table('kelompok')->where('id_periode',$data['periode']->id)->count();
+        }else{
+            $data['jumlahkelompok'] = 0;
+            $data['jumlahsiswa'] = 0;
+        }
+
 
         return view('admin.penilaian-list',$data);
     }
@@ -32,7 +38,12 @@ class PenilaianController extends Controller
     public function get_data($id)
     {
         if($id == 0){
-            $periode = DB::table('periode')->where('status','on')->orderBy('created_at')->pluck('id');
+            $cek = DB::table('periode')->where('status','on')->orderBy('created_at')->first();
+            if($cek){
+                $periode = $cek->id;
+            }else{
+                $periode = 0;
+            }
         }else{
             $periode = $id;
         }

@@ -95,9 +95,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('admin_penilaian/get_perusahaan/{id}', [AdminPenilaianController::class, 'get_perusahaan']);
         Route::get('admin_penilaian/cari/{id}', [AdminPenilaianController::class, 'cari']);
     });
-    Route::middleware('guru')->group(function () {
 
-    });
     Route::middleware('siswa')->group(function () {
         Route::get('siswa_perusahaan', [SiswaPerusahaanController::class, 'index']);
         Route::get('siswa_perusahaan/get_data', [SiswaPerusahaanController::class, 'get_data']);
@@ -113,6 +111,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('siswa_sertifikat',[SiswaSertifikatController::class,'index']);
         Route::get('siswa_sertifikat/cetak',[SiswaSertifikatController::class,'cetak']);
+        Route::get('siswa_sertifikat/test/{id}',[SiswaSertifikatController::class,'test']);
     });
 
 });

@@ -21,22 +21,22 @@ class KelasController extends Controller
     }
     public function get_data()
     {
-            $data = DB::table('kelas as k')
-            ->leftjoin('users as u','k.id_walikelas','u.id')
-            ->select(DB::raw('
-                k.*,
-                u.name nama_walikelas
-            '))
-            ->orderBy('id','desc')->get();
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->addColumn('action', function($row){
-                    $actionBtn = '<button type="button" class="edit btn btn-success btn-sm" id="btn_edit" data-id="'.$row->id.'"><i class="fas fa-pen"></i></button> <button type="button" class="delete btn btn-danger btn-sm" id="btn_hapus" data-id="'.$row->id.'"><i class="fas fa-trash-alt"></i></button>'.
-                        '<input type="hidden" id="id'.$row->id.'" value="'.$row->id.'">';
-                    return $actionBtn;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
+        $data = DB::table('kelas as k')
+        ->leftjoin('users as u','k.id_walikelas','u.id')
+        ->select(DB::raw('
+            k.*,
+            u.name nama_walikelas
+        '))
+        ->orderBy('id','desc')->get();
+        return Datatables::of($data)
+            ->addIndexColumn()
+            ->addColumn('action', function($row){
+                $actionBtn = '<button type="button" class="edit btn btn-success btn-sm" id="btn_edit" data-id="'.$row->id.'"><i class="fas fa-pen"></i></button> <button type="button" class="delete btn btn-danger btn-sm" id="btn_hapus" data-id="'.$row->id.'"><i class="fas fa-trash-alt"></i></button>'.
+                    '<input type="hidden" id="id'.$row->id.'" value="'.$row->id.'">';
+                return $actionBtn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
 
     }
     public function simpan(Request $request)

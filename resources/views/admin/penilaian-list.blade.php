@@ -7,6 +7,7 @@
         <div class="row">
           <div class="col-12">
             <div class="callout callout-info">
+                @if($periode)
                     @if ((count_date(now_date(),$periode->tglmulai) <= 0) && (count_date(now_date(),$periode->tglselesai) >= 0))
                     <h5 class="text-danger"><b>Periode Sedang Berlangsung, Penilaian Belum Dapat Dilakukan</b></h5>
                     @elseif (count_date(now_date(),$periode->tglmulai) >= 0)
@@ -50,7 +51,9 @@
                 </div>
                 <br>
                 <button type="button" class="btn btn-sm btn-info" id="btn_cari" style="margin-right: 5px;"><i class="fas fa-search"></i> Cari Periode</button>
-
+                @else
+                Data Kosong
+                @endif
             </div>
           </div>
         </div>

@@ -40,12 +40,12 @@ class PerusahaanController extends Controller
                         '<input type="hidden" id="id'.$row->id.'" value="'.$row->id.'">';
                     return $actionBtn;
                 })
-                ->addColumn('sisakuota', function($row){
-                    $periode = DB::table('periode')->where('status','on')->pluck('id');
-                    $sisakuota = $row->kuota - DB::table('kelompok')->where('id_periode',$periode)->where('id_perusahaan',$row->id)->count();
+                // ->addColumn('sisakuota', function($row){
+                //     $periode = DB::table('periode')->where('status','on')->pluck('id');
+                //     $sisakuota = $row->kuota - DB::table('kelompok')->where('id_periode',$periode)->where('id_perusahaan',$row->id)->count();
 
-                    return $sisakuota;
-                })
+                //     return $sisakuota;
+                // })
                 ->rawColumns(['action','status','sisakuota'])
                 ->make(true);
 

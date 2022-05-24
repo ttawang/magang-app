@@ -1,7 +1,8 @@
     <!-- Brand Logo -->
     <p href="index3.html" class="brand-link">
-      <img src="{{ url("AdminLTE-3.1.0/dist/img/AdminLTELogo.png") }}" alt="AdminLTE Logo" class="brand-image img-circle" style="opacity: .8">
-      <span class="brand-text font-weight-light">MAK-JANG</span>
+      {{-- <img src="{{ url("AdminLTE-3.1.0/dist/img/AdminLTELogo.png") }}" alt="AdminLTE Logo" class="brand-image img-circle" style="opacity: .8"> --}}
+      <img src="{{ url("AdminLTE-3.1.0/dist/img/smknasionalmalang-removebg-preview.png") }}" alt="AdminLTE Logo" class="brand-image img-circle" style="opacity: .8">
+      <span class="brand-text font-weight-light"><b>PRAKERIN</b> </span>
     </p>
 
     <div class="sidebar">

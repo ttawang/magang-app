@@ -43,4 +43,27 @@ class SiswaSertifikatController extends Controller
         return $pdf->stream('Sertifikat - '.$temp->nama_siswa.' - '.$temp->nama_perusahaan.'.pdf');
 
     }
+    public function test($id)
+    {
+        $tagihan = DB::table('tagihans')->where('id',$id)->first();
+        $temp = json_decode($tagihan->id_gudang);
+        $data = [];
+        foreach($temp as $i){
+            $barang = DB::table('orders')->where('id',$i[0])->first();
+            $temp2['nama_barang'] = $barang->nama_barang;
+            $temp2['nama_gudang'] = $i[1];
+            $temp2['qty'] = $i[3];
+            array_push($data, $temp2);
+        }
+            $temp2['nama_barang'] = '$barang->nama_barang';
+            $temp2['nama_gudang'] = '$i[1]';
+            $temp2['qty'] = '$i[3]';
+            array_push($data, $temp2);
+        foreach($data as $i){
+            $row_keys = array_values($i);
+            $rebuilded[$row_keys[0]][] = $i;
+        }
+        $pdf = PDF::loadView('siswa.test',['data'=>$rebuilded]);
+        return $pdf->stream('Sertifikat.pdf');
+    }
 }

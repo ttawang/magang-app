@@ -14,8 +14,14 @@ class KelompokController extends Controller
         $data['judul'] = 'Kelompok';
         $data['periode'] = DB::table('periode')->where('status','on')->first();
         $data['list_periode'] = DB::table('periode')->where('status','!=','on')->orderBy('id','desc')->get();
-        $data['jumlahkelompok'] = DB::table('kelompok')->where('id_periode',$data['periode']->id)->groupBy('id_perusahaan')->get()->count();
-        $data['jumlahsiswa'] = DB::table('kelompok')->where('id_periode',$data['periode']->id)->count();
+        if($data['periode']){
+            $data['jumlahkelompok'] = DB::table('kelompok')->where('id_periode',$data['periode']->id)->groupBy('id_perusahaan')->get()->count();
+            $data['jumlahsiswa'] = DB::table('kelompok')->where('id_periode',$data['periode']->id)->count();
+        }else{
+            $data['jumlahkelompok'] = 0;
+            $data['jumlahsiswa'] = 0;
+        }
+
 
         return view('admin.kelompok-list',$data);
     }
@@ -30,7 +36,12 @@ class KelompokController extends Controller
     }
     public function get_data()
     {
-        $periode = DB::table('periode')->where('status','on')->orderBy('created_at')->pluck('id');
+        $cek = DB::table('periode')->where('status','on')->orderBy('created_at')->first();
+        if($cek){
+            $periode = $cek->id;
+        }else{
+            $periode = 0;
+        }
 
         $data = DB::table('kelompok as k')
         ->join('perusahaan as p','p.id','k.id_perusahaan')->join('periode as pe','pe.id','k.id_periode')
@@ -56,6 +67,7 @@ class KelompokController extends Controller
                 $kelompok = DB::table('kelompok')->where('id_periode',$row->id_periode)->where('id_perusahaan',$row->id)->first();
                 $durasi = count_date(now_date(),$row->tglmulai);
                 if($kelompok->konfirmasi == "no"){
+                    $actionBtn = '';
                     if($durasi >= 0){
                         $actionBtn = '<button type="button" class="edit btn btn-info btn-sm" id="btn_konfirmasi" data-id="'.$row->id.'" data-periode="'.$row->id_periode.'" data-toggle="tooltip" data-placement="top" title="Konfirmasi Pendaftaran"><i class="fas fa-check"></i></button>';
                     }

@@ -112,11 +112,5 @@ class HomeController extends Controller
         $data = collect($data);
         return response()->json($data);
     }
-    public function chart()
-    {
-        $result = DB::table('stocks')->orderBy('stockYear','asc')->get();
-
-        return response()->json($result);
-    }
 
 }

@@ -7,10 +7,14 @@
           <div class="col-12">
             <div class="callout callout-info">
             @if(($kelompok) && $kelompok[0]->konfirmasi == 'yes')
-                @if (count_date(now_date(),$periode->tglselesai) > 0)
+                @if ((count_date(now_date(),$periode->tglmulai) <= 0) && (count_date(now_date(),$periode->tglselesai) >= 0))
                 <h5><i class="fas fa-info"></i> Perhatian:</h5>
                 Periode sedang berlangsung, masukkan setiap kegiatan individu maupun kelompok. <br><br>
                 <button type="button" class="btn btn-sm btn-info" id="btn_tambah_laporan" style="margin-right: 5px;"><i class="fas fa-plus-circle"></i></i> Tambah Laporan</button>
+                @elseif (count_date(now_date(),$periode->tglmulai) >= 0)
+                <h5><i class="fas fa-info"></i> Perhatian:</h5>
+                Periode akan berlangsung, anda tidak dapat menambahkan kegiatan individu maupun kelompok. <br><br>
+                <button type="button" class="btn btn-sm btn-info" id="btn_tambah_laporan" style="margin-right: 5px;" disabled><i class="fas fa-plus-circle"></i></i> Tambah Laporan</button>
                 @else
                 <h5><i class="fas fa-info"></i> Perhatian:</h5>
                 Periode telah selesai, anda tidak dapat menambahkan kegiatan individu maupun kelompok. <br><br>
